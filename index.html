@@ -251,135 +251,71 @@
     </div>
 
     <!-- JavaScript Logic -->
+     <!-- MULAI SCRIPT LENGKAP -->
     <script>
         // ==========================================
-        // 1. KONFIGURASI SUPABASE (PASTE DI SINI)
+        // 1. KONFIGURASI SUPABASE
         // ==========================================
         const SUPABASE_URL = 'https://vguygxecyogjervhmpmo.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZndXlneGVjeW9namVydmhtcG1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMzM0NzIsImV4cCI6MjA3OTcwOTQ3Mn0.1gCVbR0Xwi8O_UrDCh5qbd52uQurv_F4SXDRGZw1RiI';
+        
+        // --- MASUKKAN KODE KUNCI PANJANG ANDA DI ANTARA TANDA KUTIP DI BAWAH INI ---
+        const SUPABASE_KEY = 'PASTE_KODE_SUPABASE_ANON_KEY_ANDA_DISINI'; 
         
         // Inisialisasi Client Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ... (sisa kode javascript lainnya ada di bawah sini) ...
-        // --- DATA CONFIGURATION ---
-        // Mapping pemeriksaan to tarif options and jasa options
+        // ==========================================
+        // 2. DATA CONFIGURATION (HARGA & MENU)
+        // ==========================================
         const pricingConfig = {
-            "THORAX": {
-                tarif: [122500, 130500, 145500, 153500],
-                jasa: [40000, 46000, 54000, 58000]
-            },
-            "LUMBAL": {
-                tarif: [190500, 195500, 202500, 209500],
-                jasa: [66000, 70000, 74000, 76000]
-            },
-            "ABDOMEN 3 PSS": {
-                tarif: [302500, 326500, 366000, 388500],
-                jasa: [124000, 138000, 160000, 174000]
-            },
-            "KEPALA": {
-                tarif: [150000, 216000, 259200, 311040],
-                jasa: [36000, 39000, 41000, 43000]
-            },
-            "CERVICAL": {
-                tarif: [167000, 190500, 205000, 217500],
-                jasa: [66000, 80000, 88000, 96000]
-            },
-            "CLAVICULA": {
-                tarif: [104000, 116500, 124000, 131000],
-                jasa: [33000, 40000, 44000, 48000]
-            },
-            "SHOULDER": {
-                tarif: [147500, 154500, 162500, 171500],
-                jasa: [52000, 55000, 60000, 64000]
-            },
-            "HUMERUS": {
-                tarif: [147500, 154500, 162500, 171500],
-                jasa: [52000, 55000, 60000, 64000]
-            },
-            "ANTEBRACHI": {
-                tarif: [147500, 154500, 162500, 171500],
-                jasa: [52000, 55000, 60000, 64000]
-            },
-            "ELBOW": {
-                tarif: [147500, 154500, 162500, 171500],
-                jasa: [52000, 55000, 60000, 64000]
-            },
-            "MANUS": {
-                tarif: [158500, 165500, 173500, 182500],
-                jasa: [52000, 55000, 60000, 64000]
-            },
-            "WRIST": {
-                tarif: [158500, 165500, 173500, 182500],
-                jasa: [5000, 6000, 7000, 8000], // Note: Prompt said Jasa Radiografer here, treated as Jasa field
-                jasaLabel: "Jasa Radiografer Wrist" 
-            },
-            "THORACHOLUMBAL": {
-                tarif: [228000, 273600, 328320, 393984],
-                jasa: [78796, 65664, 54720, 45600]
-            },
-            "THORACHAL": {
-                tarif: [190500, 195500, 202500, 209500],
-                jasa: [66000, 70000, 74000, 76000]
-            },
-            "PEDIS": {
-                tarif: [149500, 154500, 162500, 171500],
-                jasa: [50000, 55000, 60000, 64000]
-            },
-            "ANKLE": {
-                tarif: [149500, 154500, 162500, 171500],
-                jasa: [50000, 55000, 60000, 64000]
-            },
-            "GENU": {
-                tarif: [149500, 154500, 162500, 171500],
-                jasa: [50000, 55000, 60000, 64000]
-            },
-            "CRURIS": {
-                tarif: [172500, 179500, 186500, 193500],
-                jasa: [66000, 70000, 73000, 76000]
-            },
-            "FEMUR": {
-                tarif: [172500, 179500, 186500, 193500],
-                jasa: [66000, 70000, 73000, 76000]
-            },
-            "USG ABDOMEN": {
-                tarif: [400000, 440000, 480000, 520000],
-                jasa: "manual"
-            },
-            "USG TIROID": {
-                tarif: [175000, 192000, 21000, 227500],
-                jasa: "manual"
-            },
-            "USG MAMAE": {
-                tarif: [190000, 209000, 219000, 228000],
-                jasa: "manual"
-            },
-            "USG DOPLER EXTREMITAS": {
-                tarif: [220000, 242000, 264000, 286000],
-                jasa: "manual"
-            },
-            "USG LAIN LAIN": {
-                tarif: "manual",
-                jasa: "manual"
-            },
-            "BNO": { tarif: "manual", jasa: "manual" }, // Not specified in prompt detail, fallback to manual
-            "ABDOMEN": { tarif: "manual", jasa: "manual" }, // Standard abdomen single pos?
+            "THORAX": { tarif: [122500, 130500, 145500, 153500], jasa: [40000, 46000, 54000, 58000] },
+            "LUMBAL": { tarif: [190500, 195500, 202500, 209500], jasa: [66000, 70000, 74000, 76000] },
+            "ABDOMEN 3 PSS": { tarif: [302500, 326500, 366000, 388500], jasa: [124000, 138000, 160000, 174000] },
+            "KEPALA": { tarif: [150000, 216000, 259200, 311040], jasa: [36000, 39000, 41000, 43000] },
+            "CERVICAL": { tarif: [167000, 190500, 205000, 217500], jasa: [66000, 80000, 88000, 96000] },
+            "CLAVICULA": { tarif: [104000, 116500, 124000, 131000], jasa: [33000, 40000, 44000, 48000] },
+            "SHOULDER": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
+            "HUMERUS": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
+            "ANTEBRACHI": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
+            "ELBOW": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
+            "MANUS": { tarif: [158500, 165500, 173500, 182500], jasa: [52000, 55000, 60000, 64000] },
+            "WRIST": { tarif: [158500, 165500, 173500, 182500], jasa: [5000, 6000, 7000, 8000], jasaLabel: "Jasa Radiografer Wrist" },
+            "THORACHOLUMBAL": { tarif: [228000, 273600, 328320, 393984], jasa: [78796, 65664, 54720, 45600] },
+            "THORACHAL": { tarif: [190500, 195500, 202500, 209500], jasa: [66000, 70000, 74000, 76000] },
+            "PEDIS": { tarif: [149500, 154500, 162500, 171500], jasa: [50000, 55000, 60000, 64000] },
+            "ANKLE": { tarif: [149500, 154500, 162500, 171500], jasa: [50000, 55000, 60000, 64000] },
+            "GENU": { tarif: [149500, 154500, 162500, 171500], jasa: [50000, 55000, 60000, 64000] },
+            "CRURIS": { tarif: [172500, 179500, 186500, 193500], jasa: [66000, 70000, 73000, 76000] },
+            "FEMUR": { tarif: [172500, 179500, 186500, 193500], jasa: [66000, 70000, 73000, 76000] },
+            "USG ABDOMEN": { tarif: [400000, 440000, 480000, 520000], jasa: "manual" },
+            "USG TIROID": { tarif: [175000, 192000, 21000, 227500], jasa: "manual" },
+            "USG MAMAE": { tarif: [190000, 209000, 219000, 228000], jasa: "manual" },
+            "USG DOPLER EXTREMITAS": { tarif: [220000, 242000, 264000, 286000], jasa: "manual" },
+            "USG LAIN LAIN": { tarif: "manual", jasa: "manual" },
+            "BNO": { tarif: "manual", jasa: "manual" }, 
+            "ABDOMEN": { tarif: "manual", jasa: "manual" },
             "PELVIS": { tarif: "manual", jasa: "manual" }
         };
 
-        // --- INIT & EVENT LISTENERS ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const dateInput = document.getElementById('tglPemeriksaan');
-            dateInput.valueAsDate = new Date(); // Set default date to today
+        // ==========================================
+        // 3. LOGIKA APLIKASI UTAMA
+        // ==========================================
 
+        let globalData = [];
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('tglPemeriksaan').valueAsDate = new Date();
             populateJenisPemeriksaan();
-            renderTable();
+            fetchData();
         });
 
         function populateJenisPemeriksaan() {
             const select = document.getElementById('jenisPemeriksaan');
-            const keys = Object.keys(pricingConfig).sort();
-            keys.forEach(key => {
+            // Bersihkan dulu
+            select.innerHTML = '<option value="">-- Pilih --</option>';
+            
+            Object.keys(pricingConfig).sort().forEach(key => {
                 const opt = document.createElement('option');
                 opt.value = key;
                 opt.textContent = key;
@@ -392,249 +328,219 @@
             const tarifContainer = document.getElementById('tarifContainer');
             const jasaContainer = document.getElementById('jasaDokterContainer');
 
-            if (!jenis || !pricingConfig[jenis]) {
-                tarifContainer.innerHTML = `<label class="block text-sm font-medium text-gray-700 mb-1">Tarif Pemeriksaan</label><input type="text" disabled class="w-full bg-gray-100 border p-2 rounded">`;
-                jasaContainer.innerHTML = `<label class="block text-sm font-medium text-gray-700 mb-1">Jasa Dokter</label><input type="text" disabled class="w-full bg-gray-100 border p-2 rounded">`;
-                return;
-            }
-
+            if (!jenis || !pricingConfig[jenis]) return;
             const config = pricingConfig[jenis];
 
-            // Render Tarif Field
-            let tarifHtml = `<label class="block text-sm font-medium text-gray-700 mb-1">Tarif Pemeriksaan (${jenis})</label>`;
+            // Build Tarif
+            let tarifHtml = `<label class="block text-sm font-medium text-gray-700 mb-1">Tarif Pemeriksaan</label>`;
             if (config.tarif === "manual") {
-                tarifHtml += `<input type="number" name="tarifPemeriksaan" id="tarifPemeriksaan" class="w-full border-gray-300 rounded-lg shadow-sm border p-2" placeholder="Input Manual Rp" required>`;
+                tarifHtml += `<input type="number" id="tarifPemeriksaan" class="input-field w-full border p-2 rounded" placeholder="Input Rp">`;
             } else {
-                tarifHtml += `<select name="tarifPemeriksaan" id="tarifPemeriksaan" class="w-full border-gray-300 rounded-lg shadow-sm border p-2" required>`;
-                config.tarif.forEach(val => {
-                    tarifHtml += `<option value="${val}">Rp ${val.toLocaleString('id-ID')}</option>`;
-                });
+                tarifHtml += `<select id="tarifPemeriksaan" class="input-field w-full border p-2 rounded">`;
+                config.tarif.forEach(val => tarifHtml += `<option value="${val}">Rp ${val.toLocaleString('id-ID')}</option>`);
                 tarifHtml += `</select>`;
             }
             tarifContainer.innerHTML = tarifHtml;
 
-            // Render Jasa Dokter Field
+            // Build Jasa
             let jasaLabel = config.jasaLabel || "Jasa Dokter";
             let jasaHtml = `<label class="block text-sm font-medium text-gray-700 mb-1">${jasaLabel}</label>`;
             if (config.jasa === "manual") {
-                jasaHtml += `<input type="number" name="jasaDokter" id="jasaDokter" class="w-full border-gray-300 rounded-lg shadow-sm border p-2" placeholder="Input Manual Rp" required>`;
+                jasaHtml += `<input type="number" id="jasaDokter" class="input-field w-full border p-2 rounded" placeholder="Input Rp">`;
             } else {
-                jasaHtml += `<select name="jasaDokter" id="jasaDokter" class="w-full border-gray-300 rounded-lg shadow-sm border p-2" required>`;
-                config.jasa.forEach(val => {
-                    jasaHtml += `<option value="${val}">Rp ${val.toLocaleString('id-ID')}</option>`;
-                });
+                jasaHtml += `<select id="jasaDokter" class="input-field w-full border p-2 rounded">`;
+                config.jasa.forEach(val => jasaHtml += `<option value="${val}">Rp ${val.toLocaleString('id-ID')}</option>`);
                 jasaHtml += `</select>`;
             }
             jasaContainer.innerHTML = jasaHtml;
         }
 
-        // --- CRUD OPERATIONS ---
+        // --- Database Operations ---
 
-        const form = document.getElementById('radiologyForm');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            saveData();
-        });
-
-        function saveData() {
-            const dataId = document.getElementById('dataId').value;
-            const timestamp = dataId ? parseInt(dataId) : new Date().getTime();
-            
-            const newData = {
-                id: timestamp,
-                noManual: document.getElementById('noManual').value,
-                kodePenjamin: document.getElementById('kodePenjamin').value,
-                tglPemeriksaan: document.getElementById('tglPemeriksaan').value,
-                namaPasien: document.getElementById('namaPasien').value,
-                jenisKelamin: document.getElementById('jenisKelamin').value,
-                kelas: document.getElementById('kelas').value,
-                jenisDokter: document.getElementById('jenisDokter').value,
-                dokterPengirim: document.getElementById('dokterPengirim').value,
-                jumlahFilm: document.getElementById('jumlahFilm').value,
-                pengulanganFoto: document.getElementById('pengulanganFoto').value,
-                faktorEksposi: document.getElementById('faktorEksposi').value,
-                radiografer: document.getElementById('radiografer').value,
-                jasaRadiografer: document.getElementById('jasaRadiografer').value,
-                jasaBahaya: document.getElementById('jasaBahaya').value,
-                jenisPemeriksaan: document.getElementById('jenisPemeriksaan').value,
-                tarifPemeriksaan: document.getElementById('tarifPemeriksaan').value,
-                jasaDokter: document.getElementById('jasaDokter').value
-            };
-
-            let dataStore = JSON.parse(localStorage.getItem('radiologyData')) || [];
-
-            if (dataId) {
-                // Update existing
-                const index = dataStore.findIndex(item => item.id == dataId);
-                if (index !== -1) {
-                    dataStore[index] = newData;
-                }
-            } else {
-                // Add new
-                dataStore.push(newData);
+        async function fetchData() {
+            if(SUPABASE_KEY.includes("PASTE_KODE")) {
+                document.getElementById('dataTableBody').innerHTML = '<tr><td colspan="7" class="text-center text-red-500 py-4 font-bold">SILAKAN EDIT SCRIPT DAN MASUKKAN SUPABASE KEY ANDA!</td></tr>';
+                return;
             }
 
-            localStorage.setItem('radiologyData', JSON.stringify(dataStore));
-            clearForm();
-            renderTable();
-            alert('Data berhasil disimpan!');
+            const { data, error } = await supabase
+                .from('radiology_records')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error(error);
+                // Jangan alert error saat loading awal agar tidak mengganggu jika data kosong
+                document.getElementById('dataTableBody').innerHTML = '<tr><td colspan="7" class="text-center py-4">Belum ada data</td></tr>';
+            } else {
+                globalData = data;
+                renderTable();
+            }
+        }
+
+        document.getElementById('radiologyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSave');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+            btn.disabled = true;
+
+            const id = document.getElementById('dataId').value;
+            
+            // Collect Data
+            const formData = {
+                no_manual: document.getElementById('noManual').value,
+                kode_penjamin: document.getElementById('kodePenjamin').value,
+                tgl_pemeriksaan: document.getElementById('tglPemeriksaan').value,
+                nama_pasien: document.getElementById('namaPasien').value,
+                jenis_kelamin: document.getElementById('jenisKelamin').value,
+                kelas: document.getElementById('kelas').value,
+                jenis_dokter: document.getElementById('jenisDokter').value,
+                dokter_pengirim: document.getElementById('dokterPengirim').value,
+                jumlah_film: document.getElementById('jumlahFilm').value,
+                pengulangan_foto: document.getElementById('pengulanganFoto').value,
+                faktor_eksposi: document.getElementById('faktorEksposi').value,
+                radiografer: document.getElementById('radiografer').value,
+                jasa_radiografer: document.getElementById('jasaRadiografer').value,
+                jasa_bahaya: document.getElementById('jasaBahaya').value,
+                jenis_pemeriksaan: document.getElementById('jenisPemeriksaan').value,
+                tarif_pemeriksaan: document.getElementById('tarifPemeriksaan').value,
+                jasa_dokter: document.getElementById('jasaDokter').value
+            };
+
+            let error;
+            if (id) {
+                // UPDATE
+                const { error: err } = await supabase.from('radiology_records').update(formData).eq('id', id);
+                error = err;
+            } else {
+                // INSERT
+                const { error: err } = await supabase.from('radiology_records').insert([formData]);
+                error = err;
+            }
+
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i> Simpan';
+            btn.disabled = false;
+
+            if (error) {
+                alert("Gagal menyimpan: " + error.message);
+            } else {
+                alert("Berhasil!");
+                resetForm();
+                fetchData();
+            }
+        });
+
+        async function deleteItem(id) {
+            if(confirm("Hapus data ini?")) {
+                const { error } = await supabase.from('radiology_records').delete().eq('id', id);
+                if (!error) fetchData();
+            }
+        }
+
+        async function deleteAllData() {
+            const pwd = prompt("Masukkan Password untuk MENGHAPUS SEMUA DATA:");
+            if(pwd !== "123456") { alert("Password Salah!"); return; }
+            if(!confirm("PERINGATAN: Data akan hilang permanen!")) return;
+
+            const { error } = await supabase.from('radiology_records').delete().neq('id', 0);
+            
+            if (error) alert("Gagal menghapus: " + error.message);
+            else {
+                alert("Semua data terhapus.");
+                fetchData();
+            }
+        }
+
+        function editItem(id) {
+            const item = globalData.find(i => i.id == id);
+            if(!item) return;
+
+            document.getElementById('dataId').value = item.id;
+            document.getElementById('noManual').value = item.no_manual;
+            document.getElementById('kodePenjamin').value = item.kode_penjamin;
+            document.getElementById('tglPemeriksaan').value = item.tgl_pemeriksaan;
+            document.getElementById('namaPasien').value = item.nama_pasien;
+            document.getElementById('jenisKelamin').value = item.jenis_kelamin;
+            document.getElementById('kelas').value = item.kelas;
+            document.getElementById('jenisDokter').value = item.jenis_dokter;
+            document.getElementById('dokterPengirim').value = item.dokter_pengirim;
+            document.getElementById('jumlahFilm').value = item.jumlah_film;
+            document.getElementById('pengulanganFoto').value = item.pengulangan_foto;
+            document.getElementById('faktorEksposi').value = item.faktor_eksposi;
+            document.getElementById('radiografer').value = item.radiografer;
+            document.getElementById('jasaRadiografer').value = item.jasa_radiografer;
+            document.getElementById('jasaBahaya').value = item.jasa_bahaya;
+            
+            // Trigger dynamic fields
+            document.getElementById('jenisPemeriksaan').value = item.jenis_pemeriksaan;
+            updateTarifFields();
+            
+            setTimeout(() => {
+                if(document.getElementById('tarifPemeriksaan')) document.getElementById('tarifPemeriksaan').value = item.tarif_pemeriksaan;
+                if(document.getElementById('jasaDokter')) document.getElementById('jasaDokter').value = item.jasa_dokter;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 100);
         }
 
         function renderTable() {
-            const dataStore = JSON.parse(localStorage.getItem('radiologyData')) || [];
+            const term = document.getElementById('searchInput').value.toLowerCase();
             const tbody = document.getElementById('dataTableBody');
-            const searchInput = document.getElementById('searchInput').value.toLowerCase();
-
             tbody.innerHTML = '';
 
-            // Filter and Sort (Newest first)
-            const filteredData = dataStore.filter(item => 
-                item.namaPasien.toLowerCase().includes(searchInput)
-            ).sort((a, b) => b.id - a.id);
+            const filtered = globalData.filter(i => i.nama_pasien.toLowerCase().includes(term));
 
-            filteredData.forEach(item => {
+            if(filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Tidak ada data</td></tr>';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const tarif = item.tarif_pemeriksaan ? parseInt(item.tarif_pemeriksaan).toLocaleString('id-ID') : '0';
+                const jasa = item.jasa_dokter ? parseInt(item.jasa_dokter).toLocaleString('id-ID') : '0';
+                
                 const tr = document.createElement('tr');
-                tr.className = "bg-white border-b hover:bg-gray-50 transition";
+                tr.className = "border-b hover:bg-gray-50";
                 tr.innerHTML = `
-                    <td class="px-4 py-3">${item.tglPemeriksaan}</td>
-                    <td class="px-4 py-3 font-medium">${item.noManual}</td>
-                    <td class="px-4 py-3">${item.namaPasien}<br><span class="text-xs text-gray-400">${item.kodePenjamin}</span></td>
-                    <td class="px-4 py-3 text-xs">${item.dokterPengirim}</td>
-                    <td class="px-4 py-3 font-semibold text-teal-600">${item.jenisPemeriksaan}</td>
-                    <td class="px-4 py-3">Rp${parseInt(item.tarifPemeriksaan).toLocaleString('id-ID')}</td>
-                    <td class="px-4 py-3">Rp${parseInt(item.jasaDokter).toLocaleString('id-ID')}</td>
+                    <td class="px-4 py-3">${item.tgl_pemeriksaan}</td>
+                    <td class="px-4 py-3">${item.no_manual}</td>
+                    <td class="px-4 py-3 font-medium">${item.nama_pasien}</td>
+                    <td class="px-4 py-3 text-green-600">${item.jenis_pemeriksaan}</td>
+                    <td class="px-4 py-3">Rp${tarif}</td>
+                    <td class="px-4 py-3">Rp${jasa}</td>
                     <td class="px-4 py-3 text-center">
-                        <button onclick="editItem(${item.id})" class="text-blue-500 hover:text-blue-700 mx-1" title="Edit">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button onclick="deleteItem(${item.id})" class="text-red-500 hover:text-red-700 mx-1" title="Hapus">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        <button onclick="editItem(${item.id})" class="text-blue-500 mx-1"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteItem(${item.id})" class="text-red-500 mx-1"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function deleteItem(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus data pasien ini?')) {
-                let dataStore = JSON.parse(localStorage.getItem('radiologyData')) || [];
-                dataStore = dataStore.filter(item => item.id != id);
-                localStorage.setItem('radiologyData', JSON.stringify(dataStore));
-                renderTable();
-            }
-        }
-
-        function editItem(id) {
-            const dataStore = JSON.parse(localStorage.getItem('radiologyData')) || [];
-            const item = dataStore.find(i => i.id == id);
-
-            if (item) {
-                document.getElementById('dataId').value = item.id;
-                document.getElementById('noManual').value = item.noManual;
-                document.getElementById('kodePenjamin').value = item.kodePenjamin;
-                document.getElementById('tglPemeriksaan').value = item.tglPemeriksaan;
-                document.getElementById('namaPasien').value = item.namaPasien;
-                document.getElementById('jenisKelamin').value = item.jenisKelamin;
-                document.getElementById('kelas').value = item.kelas;
-                document.getElementById('jenisDokter').value = item.jenisDokter;
-                document.getElementById('dokterPengirim').value = item.dokterPengirim;
-                document.getElementById('jumlahFilm').value = item.jumlahFilm;
-                document.getElementById('pengulanganFoto').value = item.pengulanganFoto;
-                document.getElementById('faktorEksposi').value = item.faktorEksposi;
-                document.getElementById('radiografer').value = item.radiografer;
-                document.getElementById('jasaRadiografer').value = item.jasaRadiografer;
-                document.getElementById('jasaBahaya').value = item.jasaBahaya;
-                
-                // Trigger change to populate dynamic fields
-                document.getElementById('jenisPemeriksaan').value = item.jenisPemeriksaan;
-                updateTarifFields();
-
-                // Wait a tick for DOM update then set values
-                setTimeout(() => {
-                    document.getElementById('tarifPemeriksaan').value = item.tarifPemeriksaan;
-                    document.getElementById('jasaDokter').value = item.jasaDokter;
-                }, 50);
-
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        function clearForm() {
+        function resetForm() {
             document.getElementById('radiologyForm').reset();
             document.getElementById('dataId').value = '';
             document.getElementById('tglPemeriksaan').valueAsDate = new Date();
-            updateTarifFields(); // Reset dynamic fields
-        }
-
-        // --- ADMIN FEATURES ---
-
-        function deleteAllData() {
-            const password = prompt("Masukkan Kata Sandi untuk Menghapus SEMUA Data:");
-            if (password === "123456") {
-                if (confirm("PERINGATAN: Semua data akan hilang permanen. Lanjutkan?")) {
-                    localStorage.removeItem('radiologyData');
-                    renderTable();
-                    alert("Semua data telah dihapus.");
-                }
-            } else if (password !== null) {
-                alert("Kata sandi salah!");
-            }
+            updateTarifFields();
         }
 
         function downloadExcel() {
-            const dataStore = JSON.parse(localStorage.getItem('radiologyData')) || [];
-            if (dataStore.length === 0) {
-                alert("Tidak ada data untuk diunduh.");
-                return;
-            }
+            if(globalData.length === 0) { alert("Data kosong"); return; }
+            
+            const header = ["ID", "Tgl", "No Manual", "Pasien", "Kode", "JK", "Kelas", "Dokter", "Pengirim", "Jml Film", "Pengulangan", "Faktor", "Radiografer", "Jasa Rad", "Jasa Bahaya", "Pemeriksaan", "Tarif", "Jasa Dr"];
+            
+            const rows = globalData.map(d => [
+                d.id, d.tgl_pemeriksaan, `"${d.no_manual}"`, `"${d.nama_pasien}"`, d.kode_penjamin, d.jenis_kelamin, d.kelas, d.jenis_dokter, `"${d.dokter_pengirim}"`, d.jumlah_film, d.pengulangan_foto, `"${d.faktor_eksposi}"`, d.radiografer, d.jasa_radiografer, d.jasa_bahaya, `"${d.jenis_pemeriksaan}"`, d.tarif_pemeriksaan, d.jasa_dokter
+            ]);
 
-            // Define Headers
-            const headers = [
-                "ID", "No Manual", "Kode Penjamin", "Tgl Pemeriksaan", "Nama Pasien", 
-                "JK", "Kelas", "Jenis Dokter", "Dokter Pengirim", 
-                "Jml Film", "Pengulangan", "Faktor Eksposi", "Radiografer", 
-                "Jasa Radiografer", "Jasa Bahaya", "Jenis Pemeriksaan", "Tarif", "Jasa Dokter"
-            ];
-
-            // Convert to CSV format
-            const csvRows = [];
-            csvRows.push(headers.join(","));
-
-            dataStore.forEach(row => {
-                const values = [
-                    row.id,
-                    `"${row.noManual}"`,
-                    row.kodePenjamin,
-                    row.tglPemeriksaan,
-                    `"${row.namaPasien}"`,
-                    row.jenisKelamin,
-                    row.kelas,
-                    row.jenisDokter,
-                    `"${row.dokterPengirim}"`,
-                    row.jumlahFilm,
-                    row.pengulanganFoto,
-                    `"${row.faktorEksposi}"`,
-                    `"${row.radiografer}"`,
-                    row.jasaRadiografer,
-                    row.jasaBahaya,
-                    `"${row.jenisPemeriksaan}"`,
-                    row.tarifPemeriksaan,
-                    row.jasaDokter
-                ];
-                csvRows.push(values.join(","));
-            });
-
-            const csvString = csvRows.join("\n");
-            const blob = new Blob([csvString], { type: "text/csv" });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.setAttribute("hidden", "");
-            a.setAttribute("href", url);
-            a.setAttribute("download", `laporan_radiologi_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            let csvContent = "data:text/csv;charset=utf-8," + header.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "data_radiologi_supabase.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
