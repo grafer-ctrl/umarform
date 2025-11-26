@@ -171,12 +171,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Jasa Bahaya Radiasi</label>
                         <select id="jasaBahaya" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary border p-2">
-                           // ==========================================
-// 1. KONFIGURASI SUPABASE (SUDAH SAYA ISI SESUAI GAMBAR)
-// ==========================================
-const SUPABASE_URL = 'https://vguygxecyogjervhmpmo.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZndXlneGVjeW9namVydmhtcG1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMzM0NzIsImV4cCI6MjA3OTcwOTQ3Mn0.1gCVbR0Xwi8O_UrDCh5qbd52uQurv_F4SXDRGZw1RiI';
-                            
+                      
                             <option value="-">-</option>
                             <option value="3500">3500</option>
                             <option value="4200">4200</option>
@@ -257,6 +252,16 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
     <!-- JavaScript Logic -->
     <script>
+        // ==========================================
+        // 1. KONFIGURASI SUPABASE (PASTE DI SINI)
+        // ==========================================
+        const SUPABASE_URL = 'https://vguygxecyogjervhmpmo.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZndXlneGVjeW9namVydmhtcG1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMzM0NzIsImV4cCI6MjA3OTcwOTQ3Mn0.1gCVbR0Xwi8O_UrDCh5qbd52uQurv_F4SXDRGZw1RiI';
+        
+        // Inisialisasi Client Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // ... (sisa kode javascript lainnya ada di bawah sini) ...
         // --- DATA CONFIGURATION ---
         // Mapping pemeriksaan to tarif options and jasa options
         const pricingConfig = {
