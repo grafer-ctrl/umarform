@@ -1,0 +1,81 @@
+Buatkan form responsive menarik cantik terdiri menu berikut, form ini bisa tersimpan dan bisa saya unduh setiap bulan, bisa di edit semisal salah, dan bisa di hapus perpasien jika salah input, PENYIMPANAN LOKAL STORAGE dan saya deploy pada github page
+NO: bebas nanti saya input manual
+KODE PENJAMIN*: ROBPJS, ROUMUM,USGBPJS,USGUMUM
+TGL PEMERIKSAAN*: otomatis ada kalender
+NAMA PASIEN*: Saya input manual
+JENIS KELAMIN*: berikan pilihan Laki-laki atau perempuan.
+KELAS*: Berikan Pilihan (ASYYIFA, MULTAZAM, SALSABILA, FIRDAUS, POLI UMUM, LUAR RS ,  UGD, POLI DALAM, POLI ANAK, RUJUKAN LUAR)
+JENIS DOKTER*: berikan pilihan UMUM DAN SPESIALIS
+DOKTER PENGIRIM*: Berikan pilihan > dr. Rini Nurul Hidayah, dr. Dadang Ismanaf, dr. Misbakhul Munir, dr. Rhama Patria Bharata, M.Med.Sc.,Sp.A, dr. Kurbiyanto, dr. Rakhma Nur Aziza, dr. Herry Purwanto, dr. Khoirul Anwar, Sp.PD, dr. Yudha Irla Saputra, Sp.PD, M.M.R, 
+JUMLAH FILM*: Saya input manual
+PENGULANGAN FOTO*: Berikan pilihan ya dan tidak
+PENGGUNAAN FAKTOR EKSPOSI*: saya input manual
+RADIOGRAFER*: Berikan pilihan Umar Said dan Wafiq Farida Az Zahraa
+Jasa Radiografer : berikan pilihan 5000,6000,7000,8000, -
+Jasa Bahaya Radiasi : berikan pilihan 3500, 4200, 5000, 6000, -
+JENIS PEMERIKSAAN : berikan pilihan THORAX, BNO , ABDOMEN, PELVIS, ABDOMEN 3 PSS,
+KEPALA, CERVICAL, CLAVICULA, SHOULDER, HUMERUS, ANTEBRACHI, ELBOW, MANUS, WRIST,FEMUR, CRURIS, GENU, ANKLE, PEDIS, LUMBAL, THORACHAL, THORACHOLUMBAL, USG, ABDOMEN, USG TIROID, USG MAMAE, USG Dopler, USG Lain Lain
+Tarif pemeriksaan Thorax: berikan pilihan Rp122.500 Rp130.500 Rp145.500 Rp153.500
+Jasa dokter Thorax: berikan pilihan Rp40.000 Rp46.000 Rp54.000 Rp58.000
+Tarif pemeriksaan Lumbal: berikan pilihan Rp190.500 Rp195.500 Rp202.500 Rp209.500
+Jasa dokter Lumbal: berikan pilihan Rp66.000 Rp70.000 Rp74.000 Rp76.000
+Tarif pemeriksaan Abdomen 3 posisi: berikan pilihan Rp302.500 Rp326.500 Rp366.000 Rp388.500
+Jasa dokter Abdomen 3 posisi: berikan pilihan Rp124.000 Rp138.000 Rp160.000 Rp174.000
+Tarif pemeriksaan Kepala: berikan pilihan Rp150.000 Rp216.000 Rp259.200 Rp311.040
+Jasa dokter Kepala: berikan pilihan Rp36.000 Rp39.000 Rp41.000 Rp43.000
+Tarif pemeriksaan Cervical: berikan pilihan Rp167.000 Rp190.500 Rp205.000 Rp217.500
+Jasa dokter Cervical: berikan pilihan Rp66.000 Rp80.000 Rp88.000 Rp96.000
+Tarif pemeriksaan Clavicula: berikan pilihan Rp104.000 Rp116.500 Rp124.000 Rp131.000 Jasa dokter
+Clavicula: berikan pilihan Rp33.000 Rp40.000 Rp44.000 Rp48.000
+Tarif pemeriksaan Shoulder: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Shoulder: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Humerus: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Humerus: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Antebrachi: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Antebrachi: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Elbow: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500
+Jasa dokter Elbow: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Thoracholumbal: berikan pilihan Rp228.000 Rp273.600 Rp328.320 Rp393.984 Jasa
+dokter Thoracholumbal: berikan pilihan Rp78.796 Rp65.664 Rp54.720 Rp45.600
+Tarif pemeriksaan Thorachal: berikan pilihan Rp190.500 Rp195.500 Rp202.500 Rp209.500 Jasa dokter
+Thorachal: berikan pilihan Rp66.000 Rp70.000 Rp74.000 Rp76.000
+Tarif pemeriksaan Lumbal: berikan pilihan Rp190.500 Rp195.500 Rp202.500 Rp209.500 Jasa dokter
+Lumbal: berikan pilihan Rp66.000 Rp70.000 Rp74.000 Rp76.000
+Tarif pemeriksaan Pedis: berikan pilihan Rp149.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Pedis: berikan pilihan Rp50.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Ankle: berikan pilihan Rp149.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Ankle: berikan pilihan Rp50.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Genu: berikan pilihan Rp149.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Genu: berikan pilihan Rp50.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Cruris: berikan pilihan Rp172.500 Rp179.500 Rp186.500 Rp193.500 Jasa dokter
+Cruris: berikan pilihan Rp66.000 Rp70.000 Rp73.000 Rp76.000
+Tarif pemeriksaan Femur: berikan pilihan Rp172.500 Rp179.500 Rp186.500 Rp193.500 Jasa dokter
+Femur: berikan pilihan Rp66.000 Rp70.000 Rp73.000 Rp76.000
+Tarif pemeriksaan Wrist: berikan pilihan Rp158.500 Rp165.500 Rp173.500 Rp182.500 Jasa radiografer
+Wrist: berikan pilihan Rp5.000 Rp6.000 Rp7.000 Rp8.000
+Tarif pemeriksaan Manus: berikan pilihan Rp158.500 Rp165.500 Rp173.500 Rp182.500 Jasa dokter
+Manus: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Elbow: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Elbow: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Antebrachi: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Antebrachi: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Humerus: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Humerus: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Shoulder: berikan pilihan Rp147.500 Rp154.500 Rp162.500 Rp171.500 Jasa dokter
+Shoulder: berikan pilihan Rp52.000 Rp55.000 Rp60.000 Rp64.000
+Tarif pemeriksaan Clavicula: berikan pilihan Rp104.000 Rp116.500 Rp124.000 Rp131.000 Jasa dokter
+Clavicula: berikan pilihan Rp33.000 Rp40.000 Rp44.000 Rp48.000
+Tarif pemeriksaan Cervical: berikan pilihan Rp167.000 Rp190.500 Rp205.000 Rp217.500 Jasa dokter
+Cervical: berikan pilihan Rp66.000 Rp80.000 Rp88.000 Rp96.000
+Tarif pemeriksaan Kepala: Rp150.000 Rp216.000 Rp259.200 Rp311.040 Jasa dokter Kepala: Rp36.000
+Rp39.000 Rp41.000 Rp43.000
+Tarif pemeriksaan USG Abdomen: Berikan pilihan 400000, 440000, 480000, 520000,
+Jasa dokter Pemeriksaan USG Abdomen: di berikan pilihan kosong saya input manual
+Tarif pemeriksaan USG Tiroid : Berikan pilihan 175000, 192000, 21000, 227500,
+Jasa dokter Pemeriksaan USG : di berikan pilihan kosong saya input manual
+Tarif pemeriksaan USG MAMAE : Berikan pilihan 190000, 209000, 219000, 228000,
+Jasa dokter Pemeriksaan MAMAE : di berikan pilihan kosong saya input manual
+Tarif pemeriksaan USG DOPLER EXTREMITAS : Berikan pilihan 220000, 242000, 264000, 286000,
+Jasa dokter Pemeriksaan MAMAE : di berikan pilihan kosong saya input manual
+Tarif pemeriksaan USG LAIN LAIN: di berikan pilihan kosong saya input manual
+Jasa dokter Pemeriksaan LAIN LAIN : di berikan pilihan kosong saya input manual
