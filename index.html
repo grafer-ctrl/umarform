@@ -1,2 +1,953 @@
-NO,KODE PENJAMIN,TGL PEMERIKSAAN,NAMA PASIEN,JENIS KELAMIN,KELAS,JENIS DOKTER,DOKTER PENGIRIM,JUMLAH FILM,PENGULANGAN FOTO,PENGGUNAAN FAKTOR EKSPOSI,RADIOGRAFER,JASA RADIOGRAFER,JASA BAHAYA RADIASI,JENIS PEMERIKSAAN,TARIF PEMERIKSAAN,JASA DOKTER
-"1","ROBPJS","2025-11-26","tumijo","Laki-laki","LUAR RS","UMUM","dr. Dadang Ismanaf","1","Tidak","1","Umar Said","5000","3500","BNO","",""
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pemeriksaan Radiologi</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .form-col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 200px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 3px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .export-section {
+            background-color: #e8f4fc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-col {
+                flex: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Form Pemeriksaan Radiologi</h1>
+            <p>Sistem pencatatan dan manajemen data pemeriksaan radiologi</p>
+        </header>
+        
+        <div id="alert-message" class="alert hidden"></div>
+        
+        <div class="card">
+            <h2 class="section-title">Data Pasien</h2>
+            <form id="patient-form">
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="no">NO</label>
+                            <input type="text" id="no" name="no" placeholder="Nomor urut">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="kode-penjamin">KODE PENJAMIN *</label>
+                            <select id="kode-penjamin" name="kode-penjamin" required>
+                                <option value="">Pilih Kode Penjamin</option>
+                                <option value="ROBPJS">ROBPJS</option>
+                                <option value="ROUMUM">ROUMUM</option>
+                                <option value="USGBPJS">USGBPJS</option>
+                                <option value="USGUMUM">USGUMUM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="tgl-pemeriksaan">TGL PEMERIKSAAN *</label>
+                            <input type="date" id="tgl-pemeriksaan" name="tgl-pemeriksaan" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="nama-pasien">NAMA PASIEN *</label>
+                            <input type="text" id="nama-pasien" name="nama-pasien" required placeholder="Nama lengkap pasien">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="jenis-kelamin">JENIS KELAMIN *</label>
+                            <select id="jenis-kelamin" name="jenis-kelamin" required>
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="kelas">KELAS *</label>
+                            <select id="kelas" name="kelas" required>
+                                <option value="">Pilih Kelas</option>
+                                <option value="ASYYIFA">ASYYIFA</option>
+                                <option value="MULTAZAM">MULTAZAM</option>
+                                <option value="SALSABILA">SALSABILA</option>
+                                <option value="FIRDAUS">FIRDAUS</option>
+                                <option value="POLI UMUM">POLI UMUM</option>
+                                <option value="LUAR RS">LUAR RS</option>
+                                <option value="UGD">UGD</option>
+                                <option value="POLI DALAM">POLI DALAM</option>
+                                <option value="POLI ANAK">POLI ANAK</option>
+                                <option value="RUJUKAN LUAR">RUJUKAN LUAR</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="jenis-dokter">JENIS DOKTER *</label>
+                            <select id="jenis-dokter" name="jenis-dokter" required>
+                                <option value="">Pilih Jenis Dokter</option>
+                                <option value="UMUM">UMUM</option>
+                                <option value="SPESIALIS">SPESIALIS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="dokter-pengirim">DOKTER PENGIRIM *</label>
+                            <select id="dokter-pengirim" name="dokter-pengirim" required>
+                                <option value="">Pilih Dokter Pengirim</option>
+                                <option value="dr. Rini Nurul Hidayah">dr. Rini Nurul Hidayah</option>
+                                <option value="dr. Dadang Ismanaf">dr. Dadang Ismanaf</option>
+                                <option value="dr. Misbakhul Munir">dr. Misbakhul Munir</option>
+                                <option value="dr. Rhama Patria Bharata, M.Med.Sc.,Sp.A">dr. Rhama Patria Bharata, M.Med.Sc.,Sp.A</option>
+                                <option value="dr. Kurbiyanto">dr. Kurbiyanto</option>
+                                <option value="dr. Rakhma Nur Aziza">dr. Rakhma Nur Aziza</option>
+                                <option value="dr. Herry Purwanto">dr. Herry Purwanto</option>
+                                <option value="dr. Khoirul Anwar, Sp.PD">dr. Khoirul Anwar, Sp.PD</option>
+                                <option value="dr. Yudha Irla Saputra, Sp.PD, M.M.R">dr. Yudha Irla Saputra, Sp.PD, M.M.R</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="section-title">Data Pemeriksaan</h2>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="jumlah-film">JUMLAH FILM *</label>
+                            <input type="number" id="jumlah-film" name="jumlah-film" required min="1">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="pengulangan-foto">PENGULANGAN FOTO *</label>
+                            <select id="pengulangan-foto" name="pengulangan-foto" required>
+                                <option value="">Pilih Opsi</option>
+                                <option value="Ya">Ya</option>
+                                <option value="Tidak">Tidak</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="faktor-eksposi">PENGGUNAAN FAKTOR EKSPOSI *</label>
+                            <input type="text" id="faktor-eksposi" name="faktor-eksposi" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="radiografer">RADIOGRAFER *</label>
+                            <select id="radiografer" name="radiografer" required>
+                                <option value="">Pilih Radiografer</option>
+                                <option value="Umar Said">Umar Said</option>
+                                <option value="Wafiq Farida Az Zahraa">Wafiq Farida Az Zahraa</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="jasa-radiografer">Jasa Radiografer</label>
+                            <select id="jasa-radiografer" name="jasa-radiografer">
+                                <option value="">Pilih Jasa</option>
+                                <option value="5000">5000</option>
+                                <option value="6000">6000</option>
+                                <option value="7000">7000</option>
+                                <option value="8000">8000</option>
+                                <option value="-">-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="jasa-bahaya-radiasi">Jasa Bahaya Radiasi</label>
+                            <select id="jasa-bahaya-radiasi" name="jasa-bahaya-radiasi">
+                                <option value="">Pilih Jasa</option>
+                                <option value="3500">3500</option>
+                                <option value="4200">4200</option>
+                                <option value="5000">5000</option>
+                                <option value="6000">6000</option>
+                                <option value="-">-</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="jenis-pemeriksaan">JENIS PEMERIKSAAN</label>
+                            <select id="jenis-pemeriksaan" name="jenis-pemeriksaan">
+                                <option value="">Pilih Jenis Pemeriksaan</option>
+                                <option value="THORAX">THORAX</option>
+                                <option value="BNO">BNO</option>
+                                <option value="ABDOMEN">ABDOMEN</option>
+                                <option value="PELVIS">PELVIS</option>
+                                <option value="ABDOMEN 3 PSS">ABDOMEN 3 PSS</option>
+                                <option value="KEPALA">KEPALA</option>
+                                <option value="CERVICAL">CERVICAL</option>
+                                <option value="CLAVICULA">CLAVICULA</option>
+                                <option value="SHOULDER">SHOULDER</option>
+                                <option value="HUMERUS">HUMERUS</option>
+                                <option value="ANTEBRACHI">ANTEBRACHI</option>
+                                <option value="ELBOW">ELBOW</option>
+                                <option value="MANUS">MANUS</option>
+                                <option value="WRIST">WRIST</option>
+                                <option value="FEMUR">FEMUR</option>
+                                <option value="CRURIS">CRURIS</option>
+                                <option value="GENU">GENU</option>
+                                <option value="ANKLE">ANKLE</option>
+                                <option value="PEDIS">PEDIS</option>
+                                <option value="LUMBAL">LUMBAL</option>
+                                <option value="THORACHAL">THORACHAL</option>
+                                <option value="THORACHOLUMBAL">THORACHOLUMBAL</option>
+                                <option value="USG">USG</option>
+                                <option value="USG TIROID">USG TIROID</option>
+                                <option value="USG MAMAE">USG MAMAE</option>
+                                <option value="USG Dopler">USG Dopler</option>
+                                <option value="USG Lain Lain">USG Lain Lain</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="tarif-section" class="hidden">
+                    <h2 class="section-title">Tarif Pemeriksaan</h2>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="tarif-pemeriksaan">Tarif Pemeriksaan</label>
+                                <select id="tarif-pemeriksaan" name="tarif-pemeriksaan">
+                                    <option value="">Pilih Tarif</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="jasa-dokter">Jasa Dokter</label>
+                                <select id="jasa-dokter" name="jasa-dokter">
+                                    <option value="">Pilih Jasa Dokter</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-success">Simpan Data</button>
+                    <button type="button" id="reset-btn" class="btn">Reset Form</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2 class="section-title">Data Tersimpan</h2>
+            <div class="table-container">
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Pasien</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Kelas</th>
+                            <th>Jenis Pemeriksaan</th>
+                            <th>Tgl Pemeriksaan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="export-section">
+            <h2 class="section-title">Ekspor Data</h2>
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="export-month">Pilih Bulan</label>
+                        <input type="month" id="export-month" name="export-month">
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="export-btn" class="btn">Ekspor ke CSV</button>
+                <button id="clear-all-btn" class="btn btn-danger">Hapus Semua Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data tarif pemeriksaan
+        const tarifData = {
+            'THORAX': {
+                tarif: ['122500', '130500', '145500', '153500'],
+                jasa: ['40000', '46000', '54000', '58000']
+            },
+            'LUMBAL': {
+                tarif: ['190500', '195500', '202500', '209500'],
+                jasa: ['66000', '70000', '74000', '76000']
+            },
+            'ABDOMEN 3 PSS': {
+                tarif: ['302500', '326500', '366000', '388500'],
+                jasa: ['124000', '138000', '160000', '174000']
+            },
+            'KEPALA': {
+                tarif: ['150000', '216000', '259200', '311040'],
+                jasa: ['36000', '39000', '41000', '43000']
+            },
+            'CERVICAL': {
+                tarif: ['167000', '190500', '205000', '217500'],
+                jasa: ['66000', '80000', '88000', '96000']
+            },
+            'CLAVICULA': {
+                tarif: ['104000', '116500', '124000', '131000'],
+                jasa: ['33000', '40000', '44000', '48000']
+            },
+            'SHOULDER': {
+                tarif: ['147500', '154500', '162500', '171500'],
+                jasa: ['52000', '55000', '60000', '64000']
+            },
+            'HUMERUS': {
+                tarif: ['147500', '154500', '162500', '171500'],
+                jasa: ['52000', '55000', '60000', '64000']
+            },
+            'ANTEBRACHI': {
+                tarif: ['147500', '154500', '162500', '171500'],
+                jasa: ['52000', '55000', '60000', '64000']
+            },
+            'ELBOW': {
+                tarif: ['147500', '154500', '162500', '171500'],
+                jasa: ['52000', '55000', '60000', '64000']
+            },
+            'THORACHOLUMBAL': {
+                tarif: ['228000', '273600', '328320', '393984'],
+                jasa: ['78796', '65664', '54720', '45600']
+            },
+            'THORACHAL': {
+                tarif: ['190500', '195500', '202500', '209500'],
+                jasa: ['66000', '70000', '74000', '76000']
+            },
+            'PEDIS': {
+                tarif: ['149500', '154500', '162500', '171500'],
+                jasa: ['50000', '55000', '60000', '64000']
+            },
+            'ANKLE': {
+                tarif: ['149500', '154500', '162500', '171500'],
+                jasa: ['50000', '55000', '60000', '64000']
+            },
+            'GENU': {
+                tarif: ['149500', '154500', '162500', '171500'],
+                jasa: ['50000', '55000', '60000', '64000']
+            },
+            'CRURIS': {
+                tarif: ['172500', '179500', '186500', '193500'],
+                jasa: ['66000', '70000', '73000', '76000']
+            },
+            'FEMUR': {
+                tarif: ['172500', '179500', '186500', '193500'],
+                jasa: ['66000', '70000', '73000', '76000']
+            },
+            'WRIST': {
+                tarif: ['158500', '165500', '173500', '182500'],
+                jasa: ['5000', '6000', '7000', '8000']
+            },
+            'MANUS': {
+                tarif: ['158500', '165500', '173500', '182500'],
+                jasa: ['52000', '55000', '60000', '64000']
+            },
+            'USG Abdomen': {
+                tarif: ['400000', '440000', '480000', '520000'],
+                jasa: []
+            },
+            'USG Tiroid': {
+                tarif: ['175000', '192000', '210000', '227500'],
+                jasa: []
+            },
+            'USG MAMAE': {
+                tarif: ['190000', '209000', '219000', '228000'],
+                jasa: []
+            },
+            'USG DOPLER EXTREMITAS': {
+                tarif: ['220000', '242000', '264000', '286000'],
+                jasa: []
+            },
+            'USG LAIN LAIN': {
+                tarif: [],
+                jasa: []
+            }
+        };
+
+        // DOM Elements
+        const patientForm = document.getElementById('patient-form');
+        const tableBody = document.getElementById('table-body');
+        const resetBtn = document.getElementById('reset-btn');
+        const exportBtn = document.getElementById('export-btn');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        const jenisPemeriksaanSelect = document.getElementById('jenis-pemeriksaan');
+        const tarifSection = document.getElementById('tarif-section');
+        const tarifPemeriksaanSelect = document.getElementById('tarif-pemeriksaan');
+        const jasaDokterSelect = document.getElementById('jasa-dokter');
+        const alertMessage = document.getElementById('alert-message');
+        const exportMonthInput = document.getElementById('export-month');
+
+        // Set tanggal hari ini sebagai default
+        document.getElementById('tgl-pemeriksaan').valueAsDate = new Date();
+
+        // Event Listeners
+        patientForm.addEventListener('submit', savePatientData);
+        resetBtn.addEventListener('click', resetForm);
+        exportBtn.addEventListener('click', exportToCSV);
+        clearAllBtn.addEventListener('click', clearAllData);
+        jenisPemeriksaanSelect.addEventListener('change', updateTarifOptions);
+
+        // Load data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', loadPatientData);
+
+        // Fungsi untuk menyimpan data pasien
+        function savePatientData(e) {
+            e.preventDefault();
+            
+            // Validasi form
+            if (!validateForm()) {
+                return;
+            }
+            
+            const formData = new FormData(patientForm);
+            const patientData = Object.fromEntries(formData);
+            
+            // Generate ID unik
+            patientData.id = Date.now().toString();
+            
+            // Simpan ke localStorage
+            let patients = JSON.parse(localStorage.getItem('radiologiPatients')) || [];
+            patients.push(patientData);
+            localStorage.setItem('radiologiPatients', JSON.stringify(patients));
+            
+            // Tampilkan pesan sukses
+            showAlert('Data pasien berhasil disimpan!', 'success');
+            
+            // Reset form
+            resetForm();
+            
+            // Muat ulang data tabel
+            loadPatientData();
+        }
+
+        // Fungsi untuk memuat data pasien ke tabel
+        function loadPatientData() {
+            const patients = JSON.parse(localStorage.getItem('radiologiPatients')) || [];
+            tableBody.innerHTML = '';
+            
+            if (patients.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Tidak ada data pasien</td></tr>';
+                return;
+            }
+            
+            patients.forEach(patient => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${patient.no || '-'}</td>
+                    <td>${patient['nama-pasien']}</td>
+                    <td>${patient['jenis-kelamin']}</td>
+                    <td>${patient.kelas}</td>
+                    <td>${patient['jenis-pemeriksaan'] || '-'}</td>
+                    <td>${patient['tgl-pemeriksaan']}</td>
+                    <td class="action-buttons">
+                        <button class="btn action-btn" onclick="editPatient('${patient.id}')">Edit</button>
+                        <button class="btn btn-danger action-btn" onclick="deletePatient('${patient.id}')">Hapus</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Fungsi untuk menghapus data pasien
+        function deletePatient(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus data pasien ini?')) {
+                let patients = JSON.parse(localStorage.getItem('radiologiPatients')) || [];
+                patients = patients.filter(patient => patient.id !== id);
+                localStorage.setItem('radiologiPatients', JSON.stringify(patients));
+                
+                showAlert('Data pasien berhasil dihapus!', 'success');
+                loadPatientData();
+            }
+        }
+
+        // Fungsi untuk mengedit data pasien
+        function editPatient(id) {
+            const patients = JSON.parse(localStorage.getItem('radiologiPatients')) || [];
+            const patient = patients.find(p => p.id === id);
+            
+            if (!patient) {
+                showAlert('Data pasien tidak ditemukan!', 'danger');
+                return;
+            }
+            
+            // Isi form dengan data pasien
+            document.getElementById('no').value = patient.no || '';
+            document.getElementById('kode-penjamin').value = patient['kode-penjamin'];
+            document.getElementById('tgl-pemeriksaan').value = patient['tgl-pemeriksaan'];
+            document.getElementById('nama-pasien').value = patient['nama-pasien'];
+            document.getElementById('jenis-kelamin').value = patient['jenis-kelamin'];
+            document.getElementById('kelas').value = patient.kelas;
+            document.getElementById('jenis-dokter').value = patient['jenis-dokter'];
+            document.getElementById('dokter-pengirim').value = patient['dokter-pengirim'];
+            document.getElementById('jumlah-film').value = patient['jumlah-film'];
+            document.getElementById('pengulangan-foto').value = patient['pengulangan-foto'];
+            document.getElementById('faktor-eksposi').value = patient['faktor-eksposi'];
+            document.getElementById('radiografer').value = patient.radiografer;
+            document.getElementById('jasa-radiografer').value = patient['jasa-radiografer'] || '';
+            document.getElementById('jasa-bahaya-radiasi').value = patient['jasa-bahaya-radiasi'] || '';
+            document.getElementById('jenis-pemeriksaan').value = patient['jenis-pemeriksaan'] || '';
+            
+            // Update tarif jika ada
+            if (patient['jenis-pemeriksaan']) {
+                updateTarifOptions();
+                document.getElementById('tarif-pemeriksaan').value = patient['tarif-pemeriksaan'] || '';
+                document.getElementById('jasa-dokter').value = patient['jasa-dokter'] || '';
+            }
+            
+            // Hapus data lama
+            deletePatient(id);
+            
+            // Scroll ke form
+            document.getElementById('patient-form').scrollIntoView({ behavior: 'smooth' });
+            
+            showAlert('Data pasien dimuat untuk diedit. Silakan perbarui dan simpan kembali.', 'success');
+        }
+
+        // Fungsi untuk reset form
+        function resetForm() {
+            patientForm.reset();
+            document.getElementById('tgl-pemeriksaan').valueAsDate = new Date();
+            tarifSection.classList.add('hidden');
+            showAlert('Form telah direset', 'success');
+        }
+
+        // Fungsi untuk mengekspor data ke CSV
+        function exportToCSV() {
+            const patients = JSON.parse(localStorage.getItem('radiologiPatients')) || [];
+            
+            if (patients.length === 0) {
+                showAlert('Tidak ada data untuk diekspor!', 'danger');
+                return;
+            }
+            
+            // Filter berdasarkan bulan jika dipilih
+            let filteredPatients = patients;
+            const selectedMonth = exportMonthInput.value;
+            
+            if (selectedMonth) {
+                filteredPatients = patients.filter(patient => {
+                    const patientMonth = patient['tgl-pemeriksaan'].substring(0, 7); // Format YYYY-MM
+                    return patientMonth === selectedMonth;
+                });
+                
+                if (filteredPatients.length === 0) {
+                    showAlert('Tidak ada data untuk bulan yang dipilih!', 'danger');
+                    return;
+                }
+            }
+            
+            // Header CSV
+            const headers = [
+                'NO', 'KODE PENJAMIN', 'TGL PEMERIKSAAN', 'NAMA PASIEN', 'JENIS KELAMIN',
+                'KELAS', 'JENIS DOKTER', 'DOKTER PENGIRIM', 'JUMLAH FILM', 'PENGULANGAN FOTO',
+                'PENGGUNAAN FAKTOR EKSPOSI', 'RADIOGRAFER', 'JASA RADIOGRAFER', 'JASA BAHAYA RADIASI',
+                'JENIS PEMERIKSAAN', 'TARIF PEMERIKSAAN', 'JASA DOKTER'
+            ];
+            
+            // Data CSV
+            const csvData = filteredPatients.map(patient => [
+                patient.no || '',
+                patient['kode-penjamin'],
+                patient['tgl-pemeriksaan'],
+                patient['nama-pasien'],
+                patient['jenis-kelamin'],
+                patient.kelas,
+                patient['jenis-dokter'],
+                patient['dokter-pengirim'],
+                patient['jumlah-film'],
+                patient['pengulangan-foto'],
+                patient['faktor-eksposi'],
+                patient.radiografer,
+                patient['jasa-radiografer'] || '',
+                patient['jasa-bahaya-radiasi'] || '',
+                patient['jenis-pemeriksaan'] || '',
+                patient['tarif-pemeriksaan'] || '',
+                patient['jasa-dokter'] || ''
+            ]);
+            
+            // Gabungkan header dan data
+            const csvContent = [
+                headers.join(','),
+                ...csvData.map(row => row.map(field => `"${field}"`).join(','))
+            ].join('\n');
+            
+            // Buat file dan unduh
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            // Nama file berdasarkan bulan
+            const fileName = selectedMonth 
+                ? `data_radiologi_${selectedMonth}.csv` 
+                : `data_radiologi_${new Date().toISOString().slice(0, 10)}.csv`;
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showAlert('Data berhasil diekspor!', 'success');
+        }
+
+        // Fungsi untuk menghapus semua data
+        function clearAllData() {
+            if (confirm('Apakah Anda yakin ingin menghapus SEMUA data pasien? Tindakan ini tidak dapat dibatalkan!')) {
+                localStorage.removeItem('radiologiPatients');
+                showAlert('Semua data pasien telah dihapus!', 'success');
+                loadPatientData();
+            }
+        }
+
+        // Fungsi untuk memperbarui opsi tarif berdasarkan jenis pemeriksaan
+        function updateTarifOptions() {
+            const jenisPemeriksaan = jenisPemeriksaanSelect.value;
+            
+            if (!jenisPemeriksaan || !tarifData[jenisPemeriksaan]) {
+                tarifSection.classList.add('hidden');
+                return;
+            }
+            
+            // Tampilkan section tarif
+            tarifSection.classList.remove('hidden');
+            
+            // Reset dropdown tarif
+            tarifPemeriksaanSelect.innerHTML = '<option value="">Pilih Tarif</option>';
+            jasaDokterSelect.innerHTML = '<option value="">Pilih Jasa Dokter</option>';
+            
+            // Tambahkan opsi tarif
+            const tarifOptions = tarifData[jenisPemeriksaan].tarif;
+            if (tarifOptions && tarifOptions.length > 0) {
+                tarifOptions.forEach(tarif => {
+                    const option = document.createElement('option');
+                    option.value = tarif;
+                    option.textContent = `Rp${formatRupiah(tarif)}`;
+                    tarifPemeriksaanSelect.appendChild(option);
+                });
+            } else {
+                // Jika tidak ada tarif yang ditentukan, buat input manual
+                tarifPemeriksaanSelect.innerHTML = '<option value="">Input Manual</option>';
+                const manualInput = document.createElement('input');
+                manualInput.type = 'text';
+                manualInput.id = 'manual-tarif';
+                manualInput.placeholder = 'Masukkan tarif manual';
+                manualInput.className = 'form-control';
+                tarifPemeriksaanSelect.parentNode.appendChild(manualInput);
+            }
+            
+            // Tambahkan opsi jasa dokter
+            const jasaOptions = tarifData[jenisPemeriksaan].jasa;
+            if (jasaOptions && jasaOptions.length > 0) {
+                jasaOptions.forEach(jasa => {
+                    const option = document.createElement('option');
+                    option.value = jasa;
+                    option.textContent = `Rp${formatRupiah(jasa)}`;
+                    jasaDokterSelect.appendChild(option);
+                });
+            } else {
+                // Jika tidak ada jasa yang ditentukan, buat input manual
+                jasaDokterSelect.innerHTML = '<option value="">Input Manual</option>';
+                const manualInput = document.createElement('input');
+                manualInput.type = 'text';
+                manualInput.id = 'manual-jasa';
+                manualInput.placeholder = 'Masukkan jasa dokter manual';
+                manualInput.className = 'form-control';
+                jasaDokterSelect.parentNode.appendChild(manualInput);
+            }
+        }
+
+        // Fungsi untuk memformat angka ke format Rupiah
+        function formatRupiah(angka) {
+            return parseInt(angka).toLocaleString('id-ID');
+        }
+
+        // Fungsi untuk menampilkan alert
+        function showAlert(message, type) {
+            alertMessage.textContent = message;
+            alertMessage.className = `alert alert-${type}`;
+            alertMessage.classList.remove('hidden');
+            
+            // Sembunyikan alert setelah 5 detik
+            setTimeout(() => {
+                alertMessage.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Fungsi untuk validasi form
+        function validateForm() {
+            const requiredFields = patientForm.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    isValid = false;
+                    field.style.borderColor = 'red';
+                } else {
+                    field.style.borderColor = '#ddd';
+                }
+            });
+            
+            if (!isValid) {
+                showAlert('Harap isi semua field yang wajib diisi!', 'danger');
+            }
+            
+            return isValid;
+        }
+    </script>
+</body>
+</html>
