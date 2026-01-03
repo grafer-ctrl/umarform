@@ -3,483 +3,1888 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Radiologi</title>
-    <!-- CSS Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Icon FontAwesome -->
+    <title>Form Data Radiologi</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase Library (PENTING JANGAN DIHAPUS) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: { colors: { primary: '#16a34a', secondary: '#15803d', accent: '#f0fdf4' } }
+    <!-- Flatpickr untuk datepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+            padding-bottom: 50px;
+        }
+        
+        .container {
+            max-width: 1300px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .form-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--success-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e63946;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: #06d6a0;
+            border-color: #06d6a0;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+        }
+        
+        .btn-warning {
+            background-color: #ffd166;
+            border-color: #ffd166;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .btn-danger {
+            background-color: #ef476f;
+            border-color: #ef476f;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+        }
+        
+        .btn-info {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .firebase-config {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .data-table-container {
+            overflow-x: auto;
+            margin-top: 30px;
+        }
+        
+        .table {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .table thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .price-input-group {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4cc9f0;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+        }
+        
+        .alert-custom {
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: var(--box-shadow);
+        }
+        
+        /* Password toggle button */
+        #togglePassword {
+            border-color: #ced4da;
+        }
+        
+        #togglePassword:hover {
+            background-color: #e9ecef;
+        }
+        
+        /* Modal delete header */
+        .modal-header.bg-danger {
+            background-color: #dc3545 !important;
+        }
+        
+        /* Password hint */
+        .text-muted code {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 15px;
+                text-align: center;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
             }
         }
+        
+        /* Custom select styling */
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+        
+        /* Custom input styling */
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+        
+        /* Time input styling */
+        .time-input-group {
+            position: relative;
+        }
+        
+        .time-input-group .form-control {
+            padding-right: 40px;
+        }
+        
+        .time-input-group .time-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        /* Animasi untuk loading */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .config-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        /* Cito badge styling */
+        .badge-cito {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .badge-reguler {
+            background-color: #28a745;
+            color: white;
+        }
+    </style>
+    
+    <!-- Firebase Configuration -->
+    <script>
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlBdOUmOyUhG416QIrqSnxNZteiT8u-0o",
+            authDomain: "radiologi-logbook.firebaseapp.com",
+            databaseURL: "https://radiologi-logbook-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "radiologi-logbook",
+            storageBucket: "radiologi-logbook.firebasestorage.app",
+            messagingSenderId: "851397722942",
+            appId: "1:851397722942:web:7b202a33c68593f4c5e26f"
+        };
     </script>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800">
-
-    <!-- Navbar -->
-    <nav class="bg-primary text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold"><i class="fa-solid fa-database mr-2"></i>Radiologi DB</h1>
-            <div>
-                <button onclick="downloadExcel()" class="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition shadow text-sm">
-                    <i class="fa-solid fa-download mr-1"></i> Excel
-                </button>
-                <button onclick="deleteAllData()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition shadow text-sm ml-2">
-                    <i class="fa-solid fa-trash mr-1"></i> Reset
-                </button>
+<body>
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-x-ray"></i> Form Data Radiologi</h1>
+                   
+                </div>
+                <div class="col-md-4 text-end">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3063/3063812.png" alt="Radiology Icon" style="height: 80px; filter: brightness(0) invert(1);">
+                </div>
             </div>
         </div>
-    </nav>
-
-    <div class="container mx-auto px-4 py-8">
         
-        <!-- Form Section -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
-            <div class="bg-accent px-6 py-4 border-b border-green-100">
-                <h2 class="text-xl font-bold text-secondary">Input Data Pasien</h2>
+        <!-- LogBook Radiologi -->
+        <div class="form-section" id="firebaseConfigSection">
+            <h3 class="section-title"><i class="fas fa-database"></i> Log Book Radiologi Data</h3>
+            <div class="config-success">
+                <h5><i class="fas fa-check-circle"></i> Terkonfigurasi Otomatis</h5>
+                <p>Database siap digunakan!</p>
+                <div id="firebaseStatus" class="mt-2">
+                    <span class="badge bg-success"><i class="fas fa-sync fa-spin"></i> Menghubungkan ke Firebase...</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Input Data -->
+        <div class="form-section">
+            <h3 class="section-title"><i class="fas fa-edit"></i> Input Data Pemeriksaan</h3>
+            
+            <!-- Informasi Pasien -->
+            <h5 class="mt-4 mb-3 text-primary"><i class="fas fa-user-injured"></i> Informasi Pasien</h5>
+            <div class="row">
+                <div class="col-md-2 mb-3">
+                    <label class="form-label required">NO</label>
+                    <input type="number" id="inputNo" class="form-control" placeholder="Nomor urut">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">KODE PENJAMIN</label>
+                    <select id="inputKodePenjamin" class="form-select">
+                        <option value="">Pilih Kode Penjamin</option>
+                        <option value="RO BPJS">RO BPJS</option>
+                        <option value="RO UMUM">RO UMUM</option>
+                        <option value="USG BPJS">USG BPJS</option>
+                        <option value="USG UMUM">USG UMUM</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">TGL PEMERIKSAAN</label>
+                    <input type="text" id="inputTglPemeriksaan" class="form-control datepicker" placeholder="Pilih tanggal">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label required">NAMA PASIEN</label>
+                    <input type="text" id="inputNamaPasien" class="form-control" placeholder="Nama lengkap pasien">
+                </div>
             </div>
             
-            <form id="radiologyForm" class="p-6">
-                <input type="hidden" id="dataId">
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Fields Input -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">No (Manual)</label>
-                        <input type="text" id="noManual" class="input-field w-full border p-2 rounded focus:ring-primary focus:border-primary">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Penjamin*</label>
-                        <select id="kodePenjamin" class="input-field w-full border p-2 rounded" required>
-                            <option value="">Pilih Kode</option>
-                            <option value="ROBPJS">ROBPJS</option>
-                            <option value="ROUMUM">ROUMUM</option>
-                            <option value="USGBPJS">USGBPJS</option>
-                            <option value="USGUMUM">USGUMUM</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tgl Pemeriksaan*</label>
-                        <input type="date" id="tglPemeriksaan" class="input-field w-full border p-2 rounded" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pasien*</label>
-                        <input type="text" id="namaPasien" class="input-field w-full border p-2 rounded" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin*</label>
-                        <select id="jenisKelamin" class="input-field w-full border p-2 rounded" required>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas*</label>
-                        <select id="kelas" class="input-field w-full border p-2 rounded" required>
-                            <option value="ASYYIFA">ASYYIFA</option>
-                            <option value="MULTAZAM">MULTAZAM</option>
-                            <option value="SALSABILA">SALSABILA</option>
-                            <option value="FIRDAUS">FIRDAUS</option>
-                            <option value="POLI UMUM">POLI UMUM</option>
-                            <option value="LUAR RS">LUAR RS</option>
-                            <option value="UGD">UGD</option>
-                            <option value="POLI DALAM">POLI DALAM</option>
-                            <option value="POLI ANAK">POLI ANAK</option>
-                            <option value="RUJUKAN LUAR">RUJUKAN LUAR</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Dokter*</label>
-                        <select id="jenisDokter" class="input-field w-full border p-2 rounded" required>
-                            <option value="UMUM">UMUM</option>
-                            <option value="SPESIALIS">SPESIALIS</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Dokter Pengirim*</label>
-                        <select id="dokterPengirim" class="input-field w-full border p-2 rounded" required>
-                            <option value="">Pilih Dokter</option>
-                            <option value="dr. Rini Nurul Hidayah">dr. Rini Nurul Hidayah</option>
-                            <option value="dr. Dadang Ismanaf">dr. Dadang Ismanaf</option>
-                            <option value="dr. Misbakhul Munir">dr. Misbakhul Munir</option>
-                            <option value="dr. Rhama Patria Bharata, M.Med.Sc.,Sp.A">dr. Rhama Patria Bharata, M.Med.Sc.,Sp.A</option>
-                            <option value="dr. Kurbiyanto">dr. Kurbiyanto</option>
-                            <option value="dr. Intan Permata Sari">dr. Rakhma Nur Aziza</option>
-                            <option value="dr. Herry Purwanto">dr. Herry Purwanto</option>
-                            <option value="dr. Khoirul Anwar, Sp.PD">dr. Khoirul Anwar, Sp.PD</option>
-                            <option value="dr. Yudha Irla Saputra, Sp.PD, M.M.R">dr. Yudha Irla Saputra, Sp.PD, M.M.R</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Film*</label>
-                        <input type="number" id="jumlahFilm" class="input-field w-full border p-2 rounded" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pengulangan Foto*</label>
-                        <select id="pengulanganFoto" class="input-field w-full border p-2 rounded" required>
-                            <option value="Tidak">Tidak</option>
-                            <option value="Ya">Ya</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Faktor Eksposi*</label>
-                        <input type="text" id="faktorEksposi" class="input-field w-full border p-2 rounded" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Radiografer*</label>
-                        <select id="radiografer" class="input-field w-full border p-2 rounded" required>
-                            <option value="Umar Said">Umar Said</option>
-                            <option value="Wafiq Farida Az Zahraa">Wafiq Farida Az Zahraa</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jasa Radiografer</label>
-                        <select id="jasaRadiografer" class="input-field w-full border p-2 rounded">
-                            <option value="-">-</option>
-                            <option value="5000">5000</option>
-                            <option value="6000">6000</option>
-                            <option value="7000">7000</option>
-                            <option value="8000">8000</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jasa Bahaya Radiasi</label>
-                        <select id="jasaBahaya" class="input-field w-full border p-2 rounded">
-                            <option value="-">-</option>
-                            <option value="3500">3500</option>
-                            <option value="4200">4200</option>
-                            <option value="5000">5000</option>
-                            <option value="6000">6000</option>
-                        </select>
-                    </div>
-
-                    <!-- Dynamic Pricing -->
-                    <div class="col-span-1 md:col-span-2 lg:col-span-3 border-t-2 border-dashed border-gray-200 mt-4 pt-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Pemeriksaan*</label>
-                                <!-- ID PENTING -->
-                                <select id="jenisPemeriksaan" onchange="updateTarifFields()" class="input-field w-full border p-2 rounded bg-green-50" required>
-                                    <option value="">-- Pilih --</option>
-                                </select>
-                            </div>
-                            <div id="tarifContainer">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Tarif Pemeriksaan</label>
-                                <select disabled class="w-full bg-gray-100 border p-2 rounded"><option>...</option></select>
-                            </div>
-                            <div id="jasaDokterContainer">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Jasa Dokter</label>
-                                <select disabled class="w-full bg-gray-100 border p-2 rounded"><option>...</option></select>
-                            </div>
-                        </div>
+            <div class="row">
+                <div class="col-md-2 mb-3">
+                    <label class="form-label required">JENIS KELAMIN</label>
+                    <select id="inputJenisKelamin" class="form-select">
+                        <option value="">Pilih</option>
+                        <option value="L">Laki-laki (L)</option>
+                        <option value="P">Perempuan (P)</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label required">KELAS</label>
+                    <select id="inputKelas" class="form-select">
+                        <option value="">Pilih Kelas</option>
+                        <option value="ASYYIFA">ASYYIFA</option>
+                        <option value="MULTAZAM">MULTAZAM</option>
+                        <option value="SALSABILA">SALSABILA</option>
+                        <option value="FIRDAUS">FIRDAUS</option>
+                        <option value="POLI UMUM">POLI UMUM</option>
+                        <option value="LUAR RUMAH SAKIT">LUAR RUMAH SAKIT</option>
+                        <option value="UGD">UGD</option>
+                        <option value="POLI DALAM">POLI DALAM</option>
+                        <option value="POLI ANAK">POLI ANAK</option>
+                        <option value="RUJUKAN LUAR">RUJUKAN LUAR</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">JENIS DOKTER</label>
+                    <select id="inputJenisDokter" class="form-select">
+                        <option value="">Pilih Jenis Dokter</option>
+                        <option value="UMUM">UMUM</option>
+                        <option value="SPESIALIS">SPESIALIS</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">DOKTER PENGIRIM</label>
+                    <select id="inputDokterPengirim" class="form-select">
+                        <option value="">Pilih Dokter Pengirim</option>
+                        <option value="dr. Rini Nurul Hidayah">dr. Rini Nurul Hidayah</option>
+                        <option value="dr. Dadang Ismanaf">dr. Dadang Ismanaf</option>
+                        <option value="dr. Misbakhul Munir">dr. Misbakhul Munir</option>
+                        <option value="dr. Kurbiyanto">dr. Kurbiyanto</option>
+                        <option value="dr. Intan Permata Sari">dr. Intan Permata Sari</option>
+                        <option value="dr. Herry Purwanto">dr. Herry Purwanto</option>
+                        <option value="dr. Khoirul Anwar, Sp.PD">dr. Khoirul Anwar, Sp.PD</option>
+                        <option value="dr. Yudha Irla Saputra, Sp.PD, M.M.R">dr. Yudha Irla Saputra, Sp.PD, M.M.R</option>
+                        <option value="dr. Rhama Patria Bharata, Sp.A">dr. Rhama Patria Bharata, Sp.A</option>
+                        <option value="dr. Lain">dr. Lain (ketik manual)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Input manual untuk dokter lain -->
+            <div class="row mb-4" id="dokterLainContainer" style="display:none;">
+                <div class="col-md-12">
+                    <label class="form-label">Nama Dokter Lain</label>
+                    <input type="text" id="inputDokterLain" class="form-control" placeholder="Ketik nama dokter lain">
+                </div>
+            </div>
+            
+            <!-- Informasi Pemeriksaan -->
+            <h5 class="mt-4 mb-3 text-primary"><i class="fas fa-stethoscope"></i> Informasi Pemeriksaan</h5>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">JENIS PEMERIKSAAN</label>
+                    <select id="inputTipePemeriksaan" class="form-select">
+                        <option value="">Pilih Jenis</option>
+                        <option value="Reguler">Reguler</option>
+                        <option value="Cito">Cito</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">WAKTU MULAI PERIKSA</label>
+                    <div class="time-input-group">
+                        <input type="time" id="inputWaktuMulai" class="form-control" placeholder="HH:MM">
+                        <span class="time-icon"><i class="fas fa-clock"></i></span>
                     </div>
                 </div>
-
-                <div class="mt-8 flex justify-end gap-3">
-                    <button type="button" onclick="resetForm()" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">Batal</button>
-                    <button type="submit" id="btnSave" class="bg-primary text-white px-8 py-2 rounded font-bold hover:bg-secondary transition shadow-md">
-                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Simpan
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">WAKTU SELESAI PERIKSA</label>
+                    <div class="time-input-group">
+                        <input type="time" id="inputWaktuSelesai" class="form-control" placeholder="HH:MM">
+                        <span class="time-icon"><i class="fas fa-clock"></i></span>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">JUMLAH FILM</label>
+                    <input type="number" id="inputJumlahFilm" class="form-control" placeholder="Jumlah film" min="0">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">PENGULANGAN FOTO</label>
+                    <select id="inputPengulanganFoto" class="form-select">
+                        <option value="">Pilih</option>
+                        <option value="Ya">Ya</option>
+                        <option value="Tidak">Tidak</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">PENGGUNAAN FAKTOR EKSPOSI</label>
+                    <input type="text" id="inputFaktorEksposi" class="form-control" placeholder="Faktor eksposi">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">RADIOGRAFER</label>
+                    <select id="inputRadiografer" class="form-select">
+                        <option value="">Pilih Radiografer</option>
+                        <option value="Umar Said">Umar Said</option>
+                        <option value="Wafiq Farida Az Zahraa">Wafiq Farida Az Zahraa</option>
+                        <option value="Lain">Lain</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label required">JASA BAHAYA RADIASI</label>
+                    <select id="inputBahayaRadiasi" class="form-select">
+                        <option value="">Pilih Jasa</option>
+                        <option value="3500">3500</option>
+                        <option value="4200">4200</option>
+                        <option value="5000">5000</option>
+                        <option value="6000">6000</option>
+                        <option value="7000">7000</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Input manual untuk radiografer lain -->
+            <div class="row mb-4" id="radiograferLainContainer" style="display:none;">
+                <div class="col-md-12">
+                    <label class="form-label">Nama Radiografer Lain</label>
+                    <input type="text" id="inputRadiograferLain" class="form-control" placeholder="Ketik nama radiografer lain">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label required">RADIOLOG</label>
+                    <select id="inputRadiolog" class="form-select">
+                        <option value="">Pilih Radiolog</option>
+                        <option value="dr. Dinar Lestari, Sp.Rad">dr. Dinar Lestari, Sp.Rad</option>
+                        <option value="dr. Lain">dr. Lain (ketik manual)</option>
+                    </select>
+                </div>
+                <div class="col-md-5 mb-3">
+                    <label class="form-label required">JENIS PEMERIKSAAN</label>
+                    <select id="inputJenisPemeriksaan" class="form-select">
+                        <option value="">Pilih Jenis Pemeriksaan</option>
+                        <option value="THORAX">THORAX</option>
+                        <option value="BNO">BNO</option>
+                        <option value="ABDOMEN">ABDOMEN</option>
+                        <option value="PELVIS">PELVIS</option>
+                        <option value="ABDOMEN 3 PSS">ABDOMEN 3 PSS</option>
+                        <option value="KEPALA AP/LAT">KEPALA AP/LAT</option>
+                        <option value="CERVICAL">CERVICAL</option>
+                        <option value="CLAVICULA">CLAVICULA</option>
+                        <option value="SHOULDER">SHOULDER</option>
+                        <option value="HUMERUS">HUMERUS</option>
+                        <option value="ANTEBRACHI">ANTEBRACHI</option>
+                        <option value="ELBOW">ELBOW</option>
+                        <option value="MANUS">MANUS</option>
+                        <option value="WRIST">WRIST</option>
+                        <option value="FEMUR">FEMUR</option>
+                        <option value="CRURIS">CRURIS</option>
+                        <option value="GENU">GENU</option>
+                        <option value="ANKLE">ANKLE</option>
+                        <option value="PEDIS">PEDIS</option>
+                        <option value="LUMBAL">LUMBAL</option>
+                        <option value="THORACHAL">THORACHAL</option>
+                        <option value="THORACHOLUMBAL">THORACHOLUMBAL</option>
+                        <option value="USG ABDOMEN">USG ABDOMEN</option>
+                        <option value="USG TIROID">USG TIroid</option>
+                        <option value="USG MAMAE">USG MAMAE</option>
+                        <option value="USG Dopler">USG Dopler</option>
+                        <option value="USG Lain Lain">USG Lain Lain</option>
+                        <option value="X Ray Lain">X Ray Lain</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">DURASI (menit)</label>
+                    <input type="number" id="inputDurasi" class="form-control" placeholder="Otomatis" readonly>
+                </div>
+            </div>
+            
+            <!-- Input manual untuk radiolog lain -->
+            <div class="row mb-4" id="radiologLainContainer" style="display:none;">
+                <div class="col-md-12">
+                    <label class="form-label">Nama Radiolog Lain</label>
+                    <input type="text" id="inputRadiologLain" class="form-control" placeholder="Ketik nama radiolog lain">
+                </div>
+            </div>
+            
+            <!-- Detail Tarif Berdasarkan Jenis Pemeriksaan -->
+            <div id="tarifSection" style="display:none;">
+                <h5 class="mt-4 mb-3 text-primary"><i class="fas fa-money-bill-wave"></i> Detail Tarif Pemeriksaan</h5>
+                
+                <!-- Pilihan tarif akan ditampilkan di sini berdasarkan jenis pemeriksaan -->
+                <div id="tarifContainer"></div>
+                
+                <!-- Input manual untuk tarif lain -->
+                <div class="row mb-3" id="tarifLainContainer" style="display:none;">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tarif Pemeriksaan Lain</label>
+                        <input type="number" id="inputTarifLain" class="form-control" placeholder="Masukkan tarif pemeriksaan">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Jasa Dokter Lain</label>
+                        <input type="number" id="inputJasaDokterLain" class="form-control" placeholder="Masukkan jasa dokter">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tombol Aksi -->
+            <div class="row mt-4">
+                <div class="col-md-12 d-flex justify-content-between">
+                    <button id="btnReset" class="btn btn-warning">
+                        <i class="fas fa-redo"></i> Reset Form
+                    </button>
+                    <button id="btnSimpan" class="btn btn-success" disabled>
+                        <i class="fas fa-save"></i> Simpan Data
                     </button>
                 </div>
-            </form>
-        </div>
-
-        <!-- Table -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            <div class="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
-                <h2 class="font-bold text-gray-700">Data Database</h2>
-                <input type="text" id="searchInput" onkeyup="renderTable()" placeholder="Cari Pasien..." class="border rounded px-3 py-1 text-sm">
             </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+        </div>
+        
+        <!-- Data yang Tersimpan -->
+        <div class="form-section">
+            <h3 class="section-title"><i class="fas fa-database"></i> Data yang Tersimpan</h3>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Cari pasien...">
+                        <button id="searchBtn" class="btn btn-outline-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <input type="month" id="filterMonth" class="form-control" value="">
+                </div>
+                <div class="col-md-4 d-flex justify-content-end">
+                    <button id="btnExport" class="btn btn-info me-2" disabled>
+                        <i class="fas fa-download"></i> Unduh Data
+                    </button>
+                    <button id="btnRefresh" class="btn btn-outline-secondary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <div class="data-table-container">
+                <table class="table table-striped table-hover">
+                    <thead>
                         <tr>
-                            <th class="px-4 py-3">Tgl</th>
-                            <th class="px-4 py-3">No</th>
-                            <th class="px-4 py-3">Pasien</th>
-                            <th class="px-4 py-3">Pemeriksaan</th>
-                            <th class="px-4 py-3">Tarif</th>
-                            <th class="px-4 py-3">Jasa Dr</th>
-                            <th class="px-4 py-3 text-center">Aksi</th>
+                            <th>NO</th>
+                            <th>NAMA PASIEN</th>
+                            <th>TGL PERIKSA</th>
+                            <th>JENIS PERIKSA</th>
+                            <th>WAKTU MULAI</th>
+                            <th>WAKTU SELESAI</th>
+                            <th>DURASI</th>
+                            <th>KELAS</th>
+                            <th>TARIF</th>
+                            <th>JASA DOKTER</th>
+                            <th>AKSI</th>
                         </tr>
                     </thead>
                     <tbody id="dataTableBody">
-                        <tr><td colspan="7" class="text-center py-4">Memuat data...</td></tr>
+                        <tr>
+                            <td colspan="11" class="text-center">Memuat data...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         
-        <footer class="text-center text-gray-400 text-xs mt-8 pb-4">
-            &copy; 2025 Radiology Data System. Powered by Supabase.
-        </footer>
+        <!-- Footer -->
+        <div class="footer">
+            <p>Sistem Form Radiologi &copy; 2023 | Dibuat dengan <i class="fas fa-heart text-danger"></i> untuk kebutuhan medis</p>
+         
+        </div>
     </div>
-
-    <!-- SCRIPT LOGIKA DI SINI -->
+    
+    <!-- Modal Hapus Data -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel"><i class="fas fa-trash"></i> Konfirmasi Hapus Data</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>PERINGATAN!</strong> Data yang dihapus tidak dapat dikembalikan.
+                    </div>
+                    <p>Anda akan menghapus data pasien: <strong id="deletePatientName">-</strong></p>
+                    <div class="mb-3">
+                        <label for="deletePassword" class="form-label">Masukkan Password untuk konfirmasi:</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="deletePassword" placeholder="Password: ???">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Password: <code>???</code></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmDelete">
+                        <i class="fas fa-trash"></i> Hapus Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Edit Data -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Data Pasien</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form edit akan dimuat di sini -->
+                    <div id="editFormContainer"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" id="btnUpdate" class="btn btn-primary">Perbarui Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
+    
+    <!-- Main Application Script -->
     <script>
-        // ==========================================
-        // 1. KONFIGURASI SUPABASE (PASTE DI BAWAH)
-        // ==========================================
+        // Inisialisasi Flatpickr untuk datepicker
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+            locale: "id",
+            defaultDate: "today"
+        });
         
-        const SUPABASE_URL = 'https://vguygxecyogjervhmpmo.supabase.co';
-        
-        // HAPUS TULISAN DI BAWAH, GANTI DENGAN KODE API KEY ANDA YANG PANJANG
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZndXlneGVjeW9namVydmhtcG1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMzM0NzIsImV4cCI6MjA3OTcwOTQ3Mn0.1gCVbR0Xwi8O_UrDCh5qbd52uQurv_F4SXDRGZw1RiI'; 
-
-        // Inisialisasi
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // ==========================================
-        // 2. LOGIKA UTAMA
-        // ==========================================
-        const pricingConfig = {
-            "THORAX": { tarif: [122500, 130500, 145500, 153500], jasa: [40000, 46000, 54000, 58000] },
-            "LUMBAL": { tarif: [190500, 195500, 202500, 209500], jasa: [66000, 70000, 74000, 76000] },
-            "ABDOMEN 3 PSS": { tarif: [302500, 326500, 366000, 388500], jasa: [124000, 138000, 160000, 174000] },
-            "KEPALA": { tarif: [150000, 216000, 259200, 311040], jasa: [36000, 39000, 41000, 43000] },
-            "CERVICAL": { tarif: [167000, 190500, 205000, 217500], jasa: [66000, 80000, 88000, 96000] },
-            "CLAVICULA": { tarif: [104000, 116500, 124000, 131000], jasa: [33000, 40000, 44000, 48000] },
-            "SHOULDER": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
-            "HUMERUS": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
-            "ANTEBRACHI": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
-            "ELBOW": { tarif: [147500, 154500, 162500, 171500], jasa: [52000, 55000, 60000, 64000] },
-            "MANUS": { tarif: [158500, 165500, 173500, 182500], jasa: [52000, 55000, 60000, 64000] },
-            "WRIST": { tarif: [158500, 165500, 173500, 182500], jasa: [5000, 6000, 7000, 8000], jasaLabel: "Jasa Radiografer Wrist" },
-            "THORACHOLUMBAL": { tarif: [228000, 273600, 328320, 393984], jasa: [78796, 65664, 54720, 45600] },
-            "THORACHAL": { tarif: [190500, 195500, 202500, 209500], jasa: [66000, 70000, 74000, 76000] },
-            "PEDIS": { tarif: [149500, 154500, 162500, 171500], jasa: [50000, 55000, 60000, 64000] },
-            "ANKLE": { tarif: [149500, 154500, 162500, 171500], jasa: [50000, 55000, 60000, 64000] },
-            "GENU": { tarif: [149500, 154500, 162500, 171500], jasa: [50000, 55000, 60000, 64000] },
-            "CRURIS": { tarif: [172500, 179500, 186500, 193500], jasa: [66000, 70000, 73000, 76000] },
-            "FEMUR": { tarif: [172500, 179500, 186500, 193500], jasa: [66000, 70000, 73000, 76000] },
-            "USG ABDOMEN": { tarif: [400000, 440000, 480000, 520000], jasa: "manual" },
-            "USG TIROID": { tarif: [175000, 192000, 21000, 227500], jasa: "manual" },
-            "USG MAMAE": { tarif: [190000, 209000, 219000, 228000], jasa: "manual" },
-            "USG DOPLER EXTREMITAS": { tarif: [220000, 242000, 264000, 286000], jasa: "manual" },
-            "USG LAIN LAIN": { tarif: "manual", jasa: "manual" },
-            "BNO": { tarif: "manual", jasa: "manual" }, 
-            "ABDOMEN": { tarif: "manual", jasa: "manual" },
-            "PELVIS": { tarif: "manual", jasa: "manual" }
+        // Data tarif berdasarkan jenis pemeriksaan
+        const tarifData = {
+            "THORAX": {
+                "tarif": ["122500", "130500", "145500", "153500"],
+                "jasa": ["40000", "46000", "54000", "58000"]
+            },
+            "LUMBAL": {
+                "tarif": ["190500", "195500", "202500", "209500"],
+                "jasa": ["66000", "70000", "74000", "76000"]
+            },
+            "ABDOMEN 3 PSS": {
+                "tarif": ["302500", "326500", "366000", "388500"],
+                "jasa": ["124000", "138000", "160000", "174000"]
+            },
+            "KEPALA AP/LAT": {
+                "tarif": ["150000", "216000", "259200", "311040"],
+                "jasa": ["36000", "39000", "41000", "43000"]
+            },
+            "CERVICAL": {
+                "tarif": ["167000", "190500", "205000", "217500"],
+                "jasa": ["66000", "80000", "88000", "96000"]
+            },
+            "CLAVICULA": {
+                "tarif": ["104000", "116500", "124000", "131000"],
+                "jasa": ["33000", "40000", "44000", "48000"]
+            },
+            "SHOULDER": {
+                "tarif": ["147500", "154500", "162500", "171500"],
+                "jasa": ["52000", "55000", "60000", "64000"]
+            },
+            "HUMERUS": {
+                "tarif": ["147500", "154500", "162500", "171500"],
+                "jasa": ["52000", "55000", "60000", "64000"]
+            },
+            "ANTEBRACHI": {
+                "tarif": ["147500", "154500", "162500", "171500"],
+                "jasa": ["52000", "55000", "60000", "64000"]
+            },
+            "ELBOW": {
+                "tarif": ["147500", "154500", "162500", "171500"],
+                "jasa": ["52000", "55000", "60000", "64000"]
+            },
+            "THORACHOLUMBAL": {
+                "tarif": ["228000", "273600", "328320", "393984"],
+                "jasa": ["78796", "65664", "54720", "45600"]
+            },
+            "THORACHAL": {
+                "tarif": ["190500", "195500", "202500", "209500"],
+                "jasa": ["66000", "70000", "74000", "76000"]
+            },
+            "PEDIS": {
+                "tarif": ["149500", "154500", "162500", "171500"],
+                "jasa": ["50000", "55000", "60000", "64000"]
+            },
+            "ANKLE": {
+                "tarif": ["149500", "154500", "162500", "171500"],
+                "jasa": ["50000", "55000", "60000", "64000"]
+            },
+            "GENU": {
+                "tarif": ["149500", "154500", "162500", "171500"],
+                "jasa": ["50000", "55000", "60000", "64000"]
+            },
+            "CRURIS": {
+                "tarif": ["172500", "179500", "186500", "193500"],
+                "jasa": ["66000", "70000", "73000", "76000"]
+            },
+            "FEMUR": {
+                "tarif": ["172500", "179500", "186500", "193500"],
+                "jasa": ["66000", "70000", "73000", "76000"]
+            },
+            "WRIST": {
+                "tarif": ["158500", "165500", "173500", "182500"],
+                "jasa": ["5000", "6000", "7000", "8000"]
+            },
+            "MANUS": {
+                "tarif": ["158500", "165500", "173500", "182500"],
+                "jasa": ["52000", "55000", "60000", "64000"]
+            },
+            "USG ABDOMEN": {
+                "tarif": ["400000", "440000", "480000", "520000"],
+                "jasa": []
+            },
+            "USG TIROID": {
+                "tarif": ["175000", "192000", "210000", "227500"],
+                "jasa": []
+            },
+            "USG MAMAE": {
+                "tarif": ["190000", "209000", "219000", "228000"],
+                "jasa": []
+            },
+            "USG Dopler": {
+                "tarif": ["220000", "242000", "264000", "286000"],
+                "jasa": []
+            }
         };
-
-        let globalData = [];
-
-        // START APLIKASI SAAT HALAMAN DIBUKA
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("Aplikasi dimulai...");
-            document.getElementById('tglPemeriksaan').valueAsDate = new Date();
-            
-            // 1. Isi Dropdown
-            populateJenisPemeriksaan();
-            
-            // 2. Ambil Data
-            fetchData();
+        
+        // Variabel global
+        let firebaseInitialized = false;
+        let database;
+        let currentEditKey = null;
+        
+        // Variabel untuk data yang akan dihapus
+        let dataToDelete = {
+            key: null,
+            patientName: null
+        };
+        
+        // Inisialisasi Firebase saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            initFirebase();
+            setupEventListeners();
+            setupDateFilter();
+            setupDeleteModal();
+            setupTimeCalculations();
         });
-
-        function populateJenisPemeriksaan() {
-            const select = document.getElementById('jenisPemeriksaan');
-            if(!select) return;
-            
-            select.innerHTML = '<option value="">-- Pilih --</option>';
-            Object.keys(pricingConfig).sort().forEach(key => {
-                const opt = document.createElement('option');
-                opt.value = key;
-                opt.textContent = key;
-                select.appendChild(opt);
+        
+        // Setup modal hapus
+        function setupDeleteModal() {
+            // Toggle show/hide password
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                const passwordInput = document.getElementById('deletePassword');
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
             });
-            console.log("Dropdown berhasil diisi.");
+            
+            // Fungsi untuk konfirmasi hapus
+            document.getElementById('btnConfirmDelete').addEventListener('click', function() {
+                const password = document.getElementById('deletePassword').value;
+                const correctPassword = '123456'; // Password yang ditentukan
+                
+                if (password !== correctPassword) {
+                    showAlert('Password salah! Data tidak dihapus.', 'danger');
+                    document.getElementById('deletePassword').focus();
+                    document.getElementById('deletePassword').select();
+                    return;
+                }
+                
+                if (dataToDelete.key) {
+                    hapusData(dataToDelete.key);
+                    
+                    // Tutup modal
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                }
+            });
+            
+            // Reset password field ketika modal ditutup
+            document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function() {
+                document.getElementById('deletePassword').value = '';
+                document.getElementById('deletePassword').type = 'password';
+                document.getElementById('togglePassword').querySelector('i').className = 'fas fa-eye';
+            });
         }
-
-        function updateTarifFields() {
-            const jenis = document.getElementById('jenisPemeriksaan').value;
+        
+        // Setup waktu kalkulasi
+        function setupTimeCalculations() {
+            const waktuMulai = document.getElementById('inputWaktuMulai');
+            const waktuSelesai = document.getElementById('inputWaktuSelesai');
+            const inputDurasi = document.getElementById('inputDurasi');
+            
+            function calculateDuration() {
+                if (waktuMulai.value && waktuSelesai.value) {
+                    const start = waktuMulai.value.split(':');
+                    const end = waktuSelesai.value.split(':');
+                    
+                    const startHour = parseInt(start[0]);
+                    const startMinute = parseInt(start[1]);
+                    const endHour = parseInt(end[0]);
+                    const endMinute = parseInt(end[1]);
+                    
+                    let totalMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+                    
+                    // Jika waktu selesai lebih kecil dari waktu mulai, diasumsikan melewati tengah malam
+                    if (totalMinutes < 0) {
+                        totalMinutes += 24 * 60;
+                    }
+                    
+                    inputDurasi.value = totalMinutes;
+                } else {
+                    inputDurasi.value = '';
+                }
+            }
+            
+            waktuMulai.addEventListener('change', calculateDuration);
+            waktuSelesai.addEventListener('change', calculateDuration);
+            
+            // Set waktu default
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            waktuMulai.value = currentTime;
+            
+            // Set waktu selesai default (1 jam kemudian)
+            const endTime = new Date(now.getTime() + 60 * 60000);
+            const endTimeStr = endTime.getHours().toString().padStart(2, '0') + ':' + endTime.getMinutes().toString().padStart(2, '0');
+            waktuSelesai.value = endTimeStr;
+            
+            // Hitung durasi awal
+            calculateDuration();
+        }
+        
+        // Fungsi untuk membuka modal hapus
+        function openDeleteModal(key, patientName) {
+            dataToDelete.key = key;
+            dataToDelete.patientName = patientName;
+            
+            document.getElementById('deletePatientName').textContent = patientName;
+            document.getElementById('deletePassword').value = '';
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+            
+            // Fokus ke input password
+            setTimeout(() => {
+                document.getElementById('deletePassword').focus();
+            }, 500);
+        }
+        
+        // Fungsi untuk inisialisasi Firebase
+        function initFirebase() {
+            try {
+                // Inisialisasi Firebase dengan konfigurasi yang sudah ditentukan
+                firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                firebaseInitialized = true;
+                
+                // Update UI
+                document.getElementById('firebaseStatus').innerHTML = 
+                    '<span class="badge bg-success"><i class="fas fa-check-circle"></i> Terhubung Online</span>';
+                document.getElementById('btnSimpan').disabled = false;
+                document.getElementById('btnExport').disabled = false;
+                
+                // Muat data
+                muatData();
+                
+                showAlert('Firebase berhasil terhubung otomatis!', 'success');
+            } catch (error) {
+                console.error("Error inisialisasi Firebase:", error);
+                document.getElementById('firebaseStatus').innerHTML = 
+                    '<span class="badge bg-danger"><i class="fas fa-times-circle"></i> Gagal terhubung</span>';
+                showAlert('Gagal terhubung ke Firebase: ' + error.message, 'danger');
+            }
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Event listener untuk dropdown dokter pengirim
+            document.getElementById('inputDokterPengirim').addEventListener('change', function() {
+                const dokterLainContainer = document.getElementById('dokterLainContainer');
+                if (this.value === 'dr. Lain') {
+                    dokterLainContainer.style.display = 'block';
+                } else {
+                    dokterLainContainer.style.display = 'none';
+                    document.getElementById('inputDokterLain').value = '';
+                }
+            });
+            
+            // Event listener untuk dropdown radiografer
+            document.getElementById('inputRadiografer').addEventListener('change', function() {
+                const radiograferLainContainer = document.getElementById('radiograferLainContainer');
+                if (this.value === 'Lain') {
+                    radiograferLainContainer.style.display = 'block';
+                } else {
+                    radiograferLainContainer.style.display = 'none';
+                    document.getElementById('inputRadiograferLain').value = '';
+                }
+            });
+            
+            // Event listener untuk dropdown radiolog
+            document.getElementById('inputRadiolog').addEventListener('change', function() {
+                const radiologLainContainer = document.getElementById('radiologLainContainer');
+                if (this.value === 'dr. Lain') {
+                    radiologLainContainer.style.display = 'block';
+                } else {
+                    radiologLainContainer.style.display = 'none';
+                    document.getElementById('inputRadiologLain').value = '';
+                }
+            });
+            
+            // Event listener untuk jenis pemeriksaan
+            document.getElementById('inputJenisPemeriksaan').addEventListener('change', function() {
+                updateTarifOptions(this.value);
+            });
+            
+            // Tombol simpan data
+            document.getElementById('btnSimpan').addEventListener('click', simpanData);
+            
+            // Tombol reset form
+            document.getElementById('btnReset').addEventListener('click', resetForm);
+            
+            // Tombol refresh data
+            document.getElementById('btnRefresh').addEventListener('click', muatData);
+            
+            // Tombol export data
+            document.getElementById('btnExport').addEventListener('click', exportData);
+            
+            // Tombol search
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                filterData(searchTerm);
+            });
+            
+            // Enter key untuk search
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.toLowerCase();
+                    filterData(searchTerm);
+                }
+            });
+            
+            // Tombol update di modal
+            document.getElementById('btnUpdate').addEventListener('click', updateData);
+        }
+        
+        // Setup date filter dengan bulan sekarang
+        function setupDateFilter() {
+            const now = new Date();
+            const currentMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+            const filterMonth = document.getElementById('filterMonth');
+            filterMonth.value = currentMonth;
+            
+            filterMonth.addEventListener('change', function() {
+                const month = this.value;
+                filterByMonth(month);
+            });
+        }
+        
+        // Fungsi untuk mengupdate pilihan tarif berdasarkan jenis pemeriksaan
+        function updateTarifOptions(jenisPemeriksaan) {
+            const tarifSection = document.getElementById('tarifSection');
             const tarifContainer = document.getElementById('tarifContainer');
-            const jasaContainer = document.getElementById('jasaDokterContainer');
-
-            if (!jenis || !pricingConfig[jenis]) return;
-            const config = pricingConfig[jenis];
-
-            let tarifHtml = `<label class="block text-sm font-medium text-gray-700 mb-1">Tarif Pemeriksaan</label>`;
-            if (config.tarif === "manual") {
-                tarifHtml += `<input type="number" id="tarifPemeriksaan" class="input-field w-full border p-2 rounded" placeholder="Input Rp">`;
+            const tarifLainContainer = document.getElementById('tarifLainContainer');
+            
+            // Sembunyikan input tarif lain
+            tarifLainContainer.style.display = 'none';
+            
+            if (jenisPemeriksaan && tarifData[jenisPemeriksaan]) {
+                // Tampilkan section tarif
+                tarifSection.style.display = 'block';
+                
+                // Buat pilihan tarif
+                let html = `<div class="price-input-group">
+                    <h6 class="mb-3">Pilihan Tarif untuk ${jenisPemeriksaan}</h6>
+                    <div class="row">`;
+                
+                // Buat pilihan tarif
+                html += `<div class="col-md-6 mb-3">
+                    <label class="form-label required">Tarif Pemeriksaan</label>
+                    <select id="selectTarif" class="form-select">`;
+                
+                tarifData[jenisPemeriksaan].tarif.forEach(tarif => {
+                    const formattedTarif = formatRupiah(parseInt(tarif));
+                    html += `<option value="${tarif}">${formattedTarif}</option>`;
+                });
+                
+                html += `</select></div>`;
+                
+                // Buat pilihan jasa dokter jika tersedia
+                if (tarifData[jenisPemeriksaan].jasa && tarifData[jenisPemeriksaan].jasa.length > 0) {
+                    html += `<div class="col-md-6 mb-3">
+                        <label class="form-label required">Jasa Dokter</label>
+                        <select id="selectJasaDokter" class="form-select">`;
+                    
+                    tarifData[jenisPemeriksaan].jasa.forEach(jasa => {
+                        const formattedJasa = formatRupiah(parseInt(jasa));
+                        html += `<option value="${jasa}">${formattedJasa}</option>`;
+                    });
+                    
+                    html += `</select></div>`;
+                } else {
+                    // Input manual untuk jasa dokter USG
+                    html += `<div class="col-md-6 mb-3">
+                        <label class="form-label required">Jasa Dokter (input manual)</label>
+                        <input type="number" id="inputJasaDokterUSG" class="form-control" placeholder="Masukkan jasa dokter">
+                    </div>`;
+                }
+                
+                html += `</div></div>`;
+                tarifContainer.innerHTML = html;
+            } else if (jenisPemeriksaan && (jenisPemeriksaan === "USG Lain Lain" || jenisPemeriksaan === "X Ray Lain")) {
+                // Tampilkan input manual untuk tarif lain
+                tarifSection.style.display = 'block';
+                tarifContainer.innerHTML = '';
+                tarifLainContainer.style.display = 'flex';
             } else {
-                tarifHtml += `<select id="tarifPemeriksaan" class="input-field w-full border p-2 rounded">`;
-                config.tarif.forEach(val => tarifHtml += `<option value="${val}">Rp ${val.toLocaleString('id-ID')}</option>`);
-                tarifHtml += `</select>`;
+                // Sembunyikan section tarif
+                tarifSection.style.display = 'none';
             }
-            tarifContainer.innerHTML = tarifHtml;
-
-            let jasaLabel = config.jasaLabel || "Jasa Dokter";
-            let jasaHtml = `<label class="block text-sm font-medium text-gray-700 mb-1">${jasaLabel}</label>`;
-            if (config.jasa === "manual") {
-                jasaHtml += `<input type="number" id="jasaDokter" class="input-field w-full border p-2 rounded" placeholder="Input Rp">`;
-            } else {
-                jasaHtml += `<select id="jasaDokter" class="input-field w-full border p-2 rounded">`;
-                config.jasa.forEach(val => jasaHtml += `<option value="${val}">Rp ${val.toLocaleString('id-ID')}</option>`);
-                jasaHtml += `</select>`;
-            }
-            jasaContainer.innerHTML = jasaHtml;
         }
-
-        async function fetchData() {
-            const { data, error } = await supabase
-                .from('radiology_records')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error("Error ambil data:", error);
-            } else {
-                globalData = data;
-                renderTable();
-            }
-        }
-
-        document.getElementById('radiologyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSave');
-            btn.innerHTML = 'Loading...';
-            btn.disabled = true;
-
-            const id = document.getElementById('dataId').value;
-            const formData = {
-                no_manual: document.getElementById('noManual').value,
-                kode_penjamin: document.getElementById('kodePenjamin').value,
-                tgl_pemeriksaan: document.getElementById('tglPemeriksaan').value,
-                nama_pasien: document.getElementById('namaPasien').value,
-                jenis_kelamin: document.getElementById('jenisKelamin').value,
-                kelas: document.getElementById('kelas').value,
-                jenis_dokter: document.getElementById('jenisDokter').value,
-                dokter_pengirim: document.getElementById('dokterPengirim').value,
-                jumlah_film: document.getElementById('jumlahFilm').value,
-                pengulangan_foto: document.getElementById('pengulanganFoto').value,
-                faktor_eksposi: document.getElementById('faktorEksposi').value,
-                radiografer: document.getElementById('radiografer').value,
-                jasa_radiografer: document.getElementById('jasaRadiografer').value,
-                jasa_bahaya: document.getElementById('jasaBahaya').value,
-                jenis_pemeriksaan: document.getElementById('jenisPemeriksaan').value,
-                tarif_pemeriksaan: document.getElementById('tarifPemeriksaan') ? document.getElementById('tarifPemeriksaan').value : 0,
-                jasa_dokter: document.getElementById('jasaDokter') ? document.getElementById('jasaDokter').value : 0
-            };
-
-            let error;
-            if (id) {
-                const { error: err } = await supabase.from('radiology_records').update(formData).eq('id', id);
-                error = err;
-            } else {
-                const { error: err } = await supabase.from('radiology_records').insert([formData]);
-                error = err;
-            }
-
-            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i> Simpan';
-            btn.disabled = false;
-
-            if (error) {
-                alert("Gagal: " + error.message);
-            } else {
-                alert("Berhasil!");
-                resetForm();
-                fetchData();
-            }
-        });
-
-        function renderTable() {
-            const term = document.getElementById('searchInput').value.toLowerCase();
-            const tbody = document.getElementById('dataTableBody');
-            tbody.innerHTML = '';
-
-            const filtered = globalData.filter(i => i.nama_pasien && i.nama_pasien.toLowerCase().includes(term));
-
-            if(filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Data kosong</td></tr>';
+        
+        // Fungsi untuk menyimpan data
+        function simpanData() {
+            if (!firebaseInitialized) {
+                showAlert('Firebase belum diinisialisasi!', 'danger');
                 return;
             }
-
-            filtered.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-gray-50";
-                tr.innerHTML = `
-                    <td class="px-4 py-3">${item.tgl_pemeriksaan}</td>
-                    <td class="px-4 py-3">${item.no_manual}</td>
-                    <td class="px-4 py-3 font-medium">${item.nama_pasien}</td>
-                    <td class="px-4 py-3 text-green-600">${item.jenis_pemeriksaan}</td>
-                    <td class="px-4 py-3">Rp${parseInt(item.tarif_pemeriksaan||0).toLocaleString('id-ID')}</td>
-                    <td class="px-4 py-3">Rp${parseInt(item.jasa_dokter||0).toLocaleString('id-ID')}</td>
-                    <td class="px-4 py-3 text-center">
-                        <button onclick="editItem(${item.id})" class="text-blue-500 mx-1"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteItem(${item.id})" class="text-red-500 mx-1"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function deleteItem(id) {
-            if(confirm("Hapus?")) {
-                await supabase.from('radiology_records').delete().eq('id', id);
-                fetchData();
+            
+            // Validasi form
+            if (!validateForm()) {
+                return;
             }
+            
+            // Ambil nilai dari form
+            const data = {
+                no: document.getElementById('inputNo').value,
+                kodePenjamin: document.getElementById('inputKodePenjamin').value,
+                tglPemeriksaan: document.getElementById('inputTglPemeriksaan').value,
+                namaPasien: document.getElementById('inputNamaPasien').value,
+                jenisKelamin: document.getElementById('inputJenisKelamin').value,
+                kelas: document.getElementById('inputKelas').value,
+                jenisDokter: document.getElementById('inputJenisDokter').value,
+                dokterPengirim: getDokterPengirimValue(),
+                tipePemeriksaan: document.getElementById('inputTipePemeriksaan').value,
+                waktuMulai: document.getElementById('inputWaktuMulai').value,
+                waktuSelesai: document.getElementById('inputWaktuSelesai').value,
+                durasi: document.getElementById('inputDurasi').value,
+                jumlahFilm: document.getElementById('inputJumlahFilm').value,
+                pengulanganFoto: document.getElementById('inputPengulanganFoto').value,
+                faktorEksposi: document.getElementById('inputFaktorEksposi').value,
+                radiografer: getRadiograferValue(),
+                bahayaRadiasi: document.getElementById('inputBahayaRadiasi').value,
+                radiolog: getRadiologValue(),
+                jenisPemeriksaan: document.getElementById('inputJenisPemeriksaan').value,
+                tarifPemeriksaan: getTarifPemeriksaanValue(),
+                jasaDokter: getJasaDokterValue(),
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+            
+            // Simpan ke Firebase
+            const newDataKey = database.ref().child('radiologi').push().key;
+            const updates = {};
+            updates['/radiologi/' + newDataKey] = data;
+            
+            // Tampilkan loading
+            const btnSimpan = document.getElementById('btnSimpan');
+            const originalText = btnSimpan.innerHTML;
+            btnSimpan.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...';
+            btnSimpan.disabled = true;
+            
+            database.ref().update(updates)
+                .then(() => {
+                    showAlert('Data berhasil disimpan!', 'success');
+                    resetForm();
+                    muatData();
+                    
+                    // Reset tombol simpan
+                    btnSimpan.innerHTML = originalText;
+                    btnSimpan.disabled = false;
+                })
+                .catch((error) => {
+                    console.error("Error menyimpan data:", error);
+                    showAlert('Gagal menyimpan data: ' + error.message, 'danger');
+                    
+                    // Reset tombol simpan
+                    btnSimpan.innerHTML = originalText;
+                    btnSimpan.disabled = false;
+                });
         }
         
-        async function deleteAllData() {
-            if(prompt("Sandi Hapus Semua?") === "123456") {
-                await supabase.from('radiology_records').delete().neq('id', 0);
-                fetchData();
+        // Fungsi untuk memuat data dari Firebase
+        function muatData() {
+            if (!firebaseInitialized) return;
+            
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '<tr><td colspan="11" class="text-center loading">Memuat data...</td></tr>';
+            
+            database.ref('radiologi').once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    
+                    if (!data) {
+                        tableBody.innerHTML = '<tr><td colspan="11" class="text-center">Belum ada data yang tersimpan</td></tr>';
+                        return;
+                    }
+                    
+                    // Kosongkan tabel
+                    tableBody.innerHTML = '';
+                    
+                    // Urutkan data berdasarkan timestamp (terbaru pertama)
+                    const sortedKeys = Object.keys(data).sort((a, b) => {
+                        return (data[b].timestamp || 0) - (data[a].timestamp || 0);
+                    });
+                    
+                    // Tampilkan data
+                    sortedKeys.forEach(key => {
+                        const item = data[key];
+                        const row = document.createElement('tr');
+                        
+                        // Format tanggal
+                        const tglPeriksa = item.tglPemeriksaan || '-';
+                        
+                        // Format mata uang
+                        const tarifFormatted = item.tarifPemeriksaan ? formatRupiah(parseInt(item.tarifPemeriksaan)) : '-';
+                        const jasaFormatted = item.jasaDokter ? formatRupiah(parseInt(item.jasaDokter)) : '-';
+                        
+                        // Badge untuk tipe pemeriksaan
+                        const tipeBadge = item.tipePemeriksaan === 'Cito' ? 
+                            '<span class="badge badge-cito">CITO</span>' : 
+                            '<span class="badge badge-reguler">REGULER</span>';
+                        
+                        row.innerHTML = `
+                            <td>${item.no || '-'}</td>
+                            <td>${item.namaPasien || '-'}</td>
+                            <td>${tglPeriksa}</td>
+                            <td>${tipeBadge}</td>
+                            <td>${item.waktuMulai || '-'}</td>
+                            <td>${item.waktuSelesai || '-'}</td>
+                            <td>${item.durasi ? item.durasi + ' menit' : '-'}</td>
+                            <td>${item.kelas || '-'}</td>
+                            <td>${tarifFormatted}</td>
+                            <td>${jasaFormatted}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-warning action-btn edit-btn" data-key="${key}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-danger action-btn delete-btn" data-key="${key}">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        
+                        tableBody.appendChild(row);
+                    });
+                    
+                    // Tambahkan event listener untuk tombol edit dan hapus
+                    document.querySelectorAll('.edit-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const key = this.getAttribute('data-key');
+                            editData(key);
+                        });
+                    });
+                    
+                    document.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const key = this.getAttribute('data-key');
+                            const patientName = this.closest('tr').querySelector('td:nth-child(2)').textContent;
+                            openDeleteModal(key, patientName);
+                        });
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error memuat data:", error);
+                    tableBody.innerHTML = '<tr><td colspan="11" class="text-center text-danger">Gagal memuat data: ' + error.message + '</td></tr>';
+                });
+        }
+        
+        // Fungsi untuk mengedit data
+        function editData(key) {
+            if (!firebaseInitialized) return;
+            
+            currentEditKey = key;
+            
+            database.ref('radiologi/' + key).once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    
+                    // Buat form edit
+                    let editForm = `
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">NO</label>
+                                <input type="number" id="editNo" class="form-control" value="${data.no || ''}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">NAMA PASIEN</label>
+                                <input type="text" id="editNamaPasien" class="form-control" value="${data.namaPasien || ''}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">TGL PEMERIKSAAN</label>
+                                <input type="date" id="editTglPemeriksaan" class="form-control" value="${data.tglPemeriksaan || ''}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">JENIS PEMERIKSAAN</label>
+                                <select id="editTipePemeriksaan" class="form-select">
+                                    <option value="Reguler" ${data.tipePemeriksaan === 'Reguler' ? 'selected' : ''}>Reguler</option>
+                                    <option value="Cito" ${data.tipePemeriksaan === 'Cito' ? 'selected' : ''}>Cito</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">WAKTU MULAI</label>
+                                <input type="time" id="editWaktuMulai" class="form-control" value="${data.waktuMulai || ''}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">WAKTU SELESAI</label>
+                                <input type="time" id="editWaktuSelesai" class="form-control" value="${data.waktuSelesai || ''}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">DURASI (menit)</label>
+                                <input type="number" id="editDurasi" class="form-control" value="${data.durasi || ''}" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">JENIS PEMERIKSAAN</label>
+                                <input type="text" id="editJenisPemeriksaan" class="form-control" value="${data.jenisPemeriksaan || ''}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">TARIF PEMERIKSAAN</label>
+                                <input type="number" id="editTarifPemeriksaan" class="form-control" value="${data.tarifPemeriksaan || ''}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">JASA DOKTER</label>
+                                <input type="number" id="editJasaDokter" class="form-control" value="${data.jasaDokter || ''}">
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('editFormContainer').innerHTML = editForm;
+                    
+                    // Setup durasi calculation untuk form edit
+                    const editWaktuMulai = document.getElementById('editWaktuMulai');
+                    const editWaktuSelesai = document.getElementById('editWaktuSelesai');
+                    const editDurasi = document.getElementById('editDurasi');
+                    
+                    function calculateEditDuration() {
+                        if (editWaktuMulai.value && editWaktuSelesai.value) {
+                            const start = editWaktuMulai.value.split(':');
+                            const end = editWaktuSelesai.value.split(':');
+                            
+                            const startHour = parseInt(start[0]);
+                            const startMinute = parseInt(start[1]);
+                            const endHour = parseInt(end[0]);
+                            const endMinute = parseInt(end[1]);
+                            
+                            let totalMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+                            
+                            if (totalMinutes < 0) {
+                                totalMinutes += 24 * 60;
+                            }
+                            
+                            editDurasi.value = totalMinutes;
+                        } else {
+                            editDurasi.value = '';
+                        }
+                    }
+                    
+                    editWaktuMulai.addEventListener('change', calculateEditDuration);
+                    editWaktuSelesai.addEventListener('change', calculateEditDuration);
+                    
+                    // Tampilkan modal
+                    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                    editModal.show();
+                })
+                .catch((error) => {
+                    console.error("Error mengambil data untuk edit:", error);
+                    showAlert('Gagal mengambil data untuk edit: ' + error.message, 'danger');
+                });
+        }
+        
+        // Fungsi untuk update data
+        function updateData() {
+            if (!currentEditKey) return;
+            
+            const updatedData = {
+                no: document.getElementById('editNo').value,
+                namaPasien: document.getElementById('editNamaPasien').value,
+                tglPemeriksaan: document.getElementById('editTglPemeriksaan').value,
+                tipePemeriksaan: document.getElementById('editTipePemeriksaan').value,
+                waktuMulai: document.getElementById('editWaktuMulai').value,
+                waktuSelesai: document.getElementById('editWaktuSelesai').value,
+                durasi: document.getElementById('editDurasi').value,
+                jenisPemeriksaan: document.getElementById('editJenisPemeriksaan').value,
+                tarifPemeriksaan: document.getElementById('editTarifPemeriksaan').value,
+                jasaDokter: document.getElementById('editJasaDokter').value,
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
+            };
+            
+            database.ref('radiologi/' + currentEditKey).update(updatedData)
+                .then(() => {
+                    showAlert('Data berhasil diperbarui!', 'success');
+                    muatData();
+                    
+                    // Tutup modal
+                    const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                    editModal.hide();
+                })
+                .catch((error) => {
+                    console.error("Error memperbarui data:", error);
+                    showAlert('Gagal memperbarui data: ' + error.message, 'danger');
+                });
+        }
+        
+        // Fungsi untuk menghapus data (dipanggil dari modal konfirmasi)
+        function hapusData(key) {
+            if (!firebaseInitialized) return;
+            
+            // Tampilkan loading
+            showAlert('Menghapus data...', 'info');
+            
+            database.ref('radiologi/' + key).remove()
+                .then(() => {
+                    showAlert('Data berhasil dihapus!', 'success');
+                    muatData();
+                })
+                .catch((error) => {
+                    console.error("Error menghapus data:", error);
+                    showAlert('Gagal menghapus data: ' + error.message, 'danger');
+                });
+        }
+        
+        // Fungsi untuk mengekspor data
+        function exportData() {
+            if (!firebaseInitialized) return;
+            
+            database.ref('radiologi').once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    
+                    if (!data) {
+                        showAlert('Tidak ada data untuk diekspor!', 'warning');
+                        return;
+                    }
+                    
+                    // Konversi data ke format CSV
+                    let csv = 'NO,KODE_PENJAMIN,TGL_PEMERIKSAAN,NAMA_PASIEN,JENIS_KELAMIN,KELAS,JENIS_DOKTER,DOKTER_PENGIRIM,TIPE_PEMERIKSAAN,WAKTU_MULAI,WAKTU_SELESAI,DURASI,JUMLAH_FILM,PENGULANGAN_FOTO,FAKTOR_EKSPOSI,RADIOGRAFER,BAHAYA_RADIASI,RADIOLOG,JENIS_PEMERIKSAAN,TARIF,JASA_DOKTER,TIMESTAMP\n';
+                    
+                    Object.keys(data).forEach(key => {
+                        const item = data[key];
+                        csv += `"${item.no || ''}","${item.kodePenjamin || ''}","${item.tglPemeriksaan || ''}","${item.namaPasien || ''}","${item.jenisKelamin || ''}","${item.kelas || ''}","${item.jenisDokter || ''}","${item.dokterPengirim || ''}","${item.tipePemeriksaan || ''}","${item.waktuMulai || ''}","${item.waktuSelesai || ''}","${item.durasi || ''}","${item.jumlahFilm || ''}","${item.pengulanganFoto || ''}","${item.faktorEksposi || ''}","${item.radiografer || ''}","${item.bahayaRadiasi || ''}","${item.radiolog || ''}","${item.jenisPemeriksaan || ''}","${item.tarifPemeriksaan || ''}","${item.jasaDokter || ''}","${item.timestamp || ''}"\n`;
+                    });
+                    
+                    // Buat blob dan download
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.setAttribute('href', url);
+                    const now = new Date();
+                    const dateStr = now.toISOString().slice(0,10);
+                    link.setAttribute('download', `data_radiologi_${dateStr}.csv`);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    showAlert('Data berhasil diekspor!', 'success');
+                })
+                .catch((error) => {
+                    console.error("Error mengekspor data:", error);
+                    showAlert('Gagal mengekspor data: ' + error.message, 'danger');
+                });
+        }
+        
+        // Fungsi untuk memfilter data berdasarkan bulan
+        function filterByMonth(month) {
+            if (!firebaseInitialized) return;
+            
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '<tr><td colspan="11" class="text-center loading">Memfilter data...</td></tr>';
+            
+            database.ref('radiologi').once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    
+                    if (!data) {
+                        tableBody.innerHTML = '<tr><td colspan="11" class="text-center">Belum ada data yang tersimpan</td></tr>';
+                        return;
+                    }
+                    
+                    // Kosongkan tabel
+                    tableBody.innerHTML = '';
+                    
+                    let hasData = false;
+                    
+                    Object.keys(data).forEach(key => {
+                        const item = data[key];
+                        
+                        // Filter berdasarkan bulan
+                        if (item.tglPemeriksaan && item.tglPemeriksaan.startsWith(month)) {
+                            hasData = true;
+                            
+                            // Format tanggal
+                            const tglPeriksa = item.tglPemeriksaan || '-';
+                            
+                            // Format mata uang
+                            const tarifFormatted = item.tarifPemeriksaan ? formatRupiah(parseInt(item.tarifPemeriksaan)) : '-';
+                            const jasaFormatted = item.jasaDokter ? formatRupiah(parseInt(item.jasaDokter)) : '-';
+                            
+                            // Badge untuk tipe pemeriksaan
+                            const tipeBadge = item.tipePemeriksaan === 'Cito' ? 
+                                '<span class="badge badge-cito">CITO</span>' : 
+                                '<span class="badge badge-reguler">REGULER</span>';
+                            
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.no || '-'}</td>
+                                <td>${item.namaPasien || '-'}</td>
+                                <td>${tglPeriksa}</td>
+                                <td>${tipeBadge}</td>
+                                <td>${item.waktuMulai || '-'}</td>
+                                <td>${item.waktuSelesai || '-'}</td>
+                                <td>${item.durasi ? item.durasi + ' menit' : '-'}</td>
+                                <td>${item.kelas || '-'}</td>
+                                <td>${tarifFormatted}</td>
+                                <td>${jasaFormatted}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-warning action-btn edit-btn" data-key="${key}">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger action-btn delete-btn" data-key="${key}">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </div>
+                                </td>
+                            `;
+                            
+                            tableBody.appendChild(row);
+                        }
+                    });
+                    
+                    if (!hasData) {
+                        tableBody.innerHTML = '<tr><td colspan="11" class="text-center">Tidak ada data untuk bulan yang dipilih</td></tr>';
+                    } else {
+                        // Tambahkan event listener untuk tombol edit dan hapus
+                        document.querySelectorAll('.edit-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const key = this.getAttribute('data-key');
+                                editData(key);
+                            });
+                        });
+                        
+                        document.querySelectorAll('.delete-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const key = this.getAttribute('data-key');
+                                const patientName = this.closest('tr').querySelector('td:nth-child(2)').textContent;
+                                openDeleteModal(key, patientName);
+                            });
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error memfilter data:", error);
+                    tableBody.innerHTML = '<tr><td colspan="11" class="text-center text-danger">Gagal memfilter data: ' + error.message + '</td></tr>';
+                });
+        }
+        
+        // Fungsi untuk memfilter data berdasarkan pencarian
+        function filterData(searchTerm) {
+            if (!firebaseInitialized) return;
+            
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '<tr><td colspan="11" class="text-center loading">Mencari data...</td></tr>';
+            
+            database.ref('radiologi').once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    
+                    if (!data) {
+                        tableBody.innerHTML = '<tr><td colspan="11" class="text-center">Belum ada data yang tersimpan</td></tr>';
+                        return;
+                    }
+                    
+                    // Kosongkan tabel
+                    tableBody.innerHTML = '';
+                    
+                    let hasData = false;
+                    
+                    Object.keys(data).forEach(key => {
+                        const item = data[key];
+                        
+                        // Cari berdasarkan nama pasien atau nomor
+                        if ((item.namaPasien && item.namaPasien.toLowerCase().includes(searchTerm)) ||
+                            (item.no && item.no.toString().includes(searchTerm))) {
+                            hasData = true;
+                            
+                            // Format tanggal
+                            const tglPeriksa = item.tglPemeriksaan || '-';
+                            
+                            // Format mata uang
+                            const tarifFormatted = item.tarifPemeriksaan ? formatRupiah(parseInt(item.tarifPemeriksaan)) : '-';
+                            const jasaFormatted = item.jasaDokter ? formatRupiah(parseInt(item.jasaDokter)) : '-';
+                            
+                            // Badge untuk tipe pemeriksaan
+                            const tipeBadge = item.tipePemeriksaan === 'Cito' ? 
+                                '<span class="badge badge-cito">CITO</span>' : 
+                                '<span class="badge badge-reguler">REGULER</span>';
+                            
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.no || '-'}</td>
+                                <td>${item.namaPasien || '-'}</td>
+                                <td>${tglPeriksa}</td>
+                                <td>${tipeBadge}</td>
+                                <td>${item.waktuMulai || '-'}</td>
+                                <td>${item.waktuSelesai || '-'}</td>
+                                <td>${item.durasi ? item.durasi + ' menit' : '-'}</td>
+                                <td>${item.kelas || '-'}</td>
+                                <td>${tarifFormatted}</td>
+                                <td>${jasaFormatted}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-warning action-btn edit-btn" data-key="${key}">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger action-btn delete-btn" data-key="${key}">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </div>
+                                </td>
+                            `;
+                            
+                            tableBody.appendChild(row);
+                        }
+                    });
+                    
+                    if (!hasData) {
+                        tableBody.innerHTML = '<tr><td colspan="11" class="text-center">Tidak ada data yang sesuai dengan pencarian</td></tr>';
+                    } else {
+                        // Tambahkan event listener untuk tombol edit dan hapus
+                        document.querySelectorAll('.edit-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const key = this.getAttribute('data-key');
+                                editData(key);
+                            });
+                        });
+                        
+                        document.querySelectorAll('.delete-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const key = this.getAttribute('data-key');
+                                const patientName = this.closest('tr').querySelector('td:nth-child(2)').textContent;
+                                openDeleteModal(key, patientName);
+                            });
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error mencari data:", error);
+                    tableBody.innerHTML = '<tr><td colspan="11" class="text-center text-danger">Gagal mencari data: ' + error.message + '</td></tr>';
+                });
+        }
+        
+        // Fungsi bantuan untuk mendapatkan nilai dokter pengirim
+        function getDokterPengirimValue() {
+            const dokterPengirim = document.getElementById('inputDokterPengirim').value;
+            if (dokterPengirim === 'dr. Lain') {
+                return document.getElementById('inputDokterLain').value || 'dr. Lain';
             }
+            return dokterPengirim;
         }
-
-        function editItem(id) {
-            const item = globalData.find(i => i.id == id);
-            if(!item) return;
-
-            document.getElementById('dataId').value = item.id;
-            document.getElementById('noManual').value = item.no_manual;
-            document.getElementById('kodePenjamin').value = item.kode_penjamin;
-            document.getElementById('tglPemeriksaan').value = item.tgl_pemeriksaan;
-            document.getElementById('namaPasien').value = item.nama_pasien;
-            document.getElementById('jenisKelamin').value = item.jenis_kelamin;
-            document.getElementById('kelas').value = item.kelas;
-            document.getElementById('jenisDokter').value = item.jenis_dokter;
-            document.getElementById('dokterPengirim').value = item.dokter_pengirim;
-            document.getElementById('jumlahFilm').value = item.jumlah_film;
-            document.getElementById('pengulanganFoto').value = item.pengulangan_foto;
-            document.getElementById('faktorEksposi').value = item.faktor_eksposi;
-            document.getElementById('radiografer').value = item.radiografer;
-            document.getElementById('jasaRadiografer').value = item.jasa_radiografer;
-            document.getElementById('jasaBahaya').value = item.jasa_bahaya;
-            
-            document.getElementById('jenisPemeriksaan').value = item.jenis_pemeriksaan;
-            updateTarifFields();
-            
-            setTimeout(() => {
-                if(document.getElementById('tarifPemeriksaan')) document.getElementById('tarifPemeriksaan').value = item.tarif_pemeriksaan;
-                if(document.getElementById('jasaDokter')) document.getElementById('jasaDokter').value = item.jasa_dokter;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 100);
+        
+        // Fungsi bantuan untuk mendapatkan nilai radiografer
+        function getRadiograferValue() {
+            const radiografer = document.getElementById('inputRadiografer').value;
+            if (radiografer === 'Lain') {
+                return document.getElementById('inputRadiograferLain').value || 'Radiografer Lain';
+            }
+            return radiografer;
         }
-
+        
+        // Fungsi bantuan untuk mendapatkan nilai radiolog
+        function getRadiologValue() {
+            const radiolog = document.getElementById('inputRadiolog').value;
+            if (radiolog === 'dr. Lain') {
+                return document.getElementById('inputRadiologLain').value || 'dr. Lain';
+            }
+            return radiolog;
+        }
+        
+        // Fungsi bantuan untuk mendapatkan nilai tarif pemeriksaan
+        function getTarifPemeriksaanValue() {
+            const jenisPemeriksaan = document.getElementById('inputJenisPemeriksaan').value;
+            
+            if (jenisPemeriksaan === "USG Lain Lain" || jenisPemeriksaan === "X Ray Lain") {
+                return document.getElementById('inputTarifLain').value;
+            } else if (tarifData[jenisPemeriksaan]) {
+                const selectTarif = document.getElementById('selectTarif');
+                return selectTarif ? selectTarif.value : '';
+            }
+            
+            return '';
+        }
+        
+        // Fungsi bantuan untuk mendapatkan nilai jasa dokter
+        function getJasaDokterValue() {
+            const jenisPemeriksaan = document.getElementById('inputJenisPemeriksaan').value;
+            
+            if (jenisPemeriksaan === "USG Lain Lain" || jenisPemeriksaan === "X Ray Lain") {
+                return document.getElementById('inputJasaDokterLain').value;
+            } else if (tarifData[jenisPemeriksaan]) {
+                // Untuk USG, gunakan input manual jika ada
+                if (jenisPemeriksaan.includes("USG") && tarifData[jenisPemeriksaan].jasa.length === 0) {
+                    const inputJasaDokterUSG = document.getElementById('inputJasaDokterUSG');
+                    return inputJasaDokterUSG ? inputJasaDokterUSG.value : '';
+                } else {
+                    const selectJasaDokter = document.getElementById('selectJasaDokter');
+                    return selectJasaDokter ? selectJasaDokter.value : '';
+                }
+            }
+            
+            return '';
+        }
+        
+        // Fungsi untuk memvalidasi form
+        function validateForm() {
+            const requiredFields = [
+                'inputNo', 'inputKodePenjamin', 'inputTglPemeriksaan', 
+                'inputNamaPasien', 'inputJenisKelamin', 'inputKelas',
+                'inputJenisDokter', 'inputDokterPengirim', 'inputTipePemeriksaan',
+                'inputWaktuMulai', 'inputWaktuSelesai', 'inputJumlahFilm',
+                'inputPengulanganFoto', 'inputFaktorEksposi', 'inputRadiografer',
+                'inputBahayaRadiasi', 'inputRadiolog', 'inputJenisPemeriksaan'
+            ];
+            
+            for (let fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    showAlert(`Field ${field.previousElementSibling.innerText} harus diisi!`, 'danger');
+                    field.focus();
+                    return false;
+                }
+            }
+            
+            // Validasi waktu (waktu selesai harus setelah waktu mulai)
+            const waktuMulai = document.getElementById('inputWaktuMulai').value;
+            const waktuSelesai = document.getElementById('inputWaktuSelesai').value;
+            
+            if (waktuMulai && waktuSelesai) {
+                const start = waktuMulai.split(':');
+                const end = waktuSelesai.split(':');
+                
+                const startHour = parseInt(start[0]);
+                const startMinute = parseInt(start[1]);
+                const endHour = parseInt(end[0]);
+                const endMinute = parseInt(end[1]);
+                
+                const totalStart = startHour * 60 + startMinute;
+                const totalEnd = endHour * 60 + endMinute;
+                
+                // Jika waktu selesai sama atau sebelum waktu mulai (kecuali melewati tengah malam)
+                if (totalEnd <= totalStart && totalEnd > 0) {
+                    showAlert('Waktu selesai harus setelah waktu mulai!', 'danger');
+                    document.getElementById('inputWaktuSelesai').focus();
+                    return false;
+                }
+            }
+            
+            // Validasi khusus untuk dokter lain
+            if (document.getElementById('inputDokterPengirim').value === 'dr. Lain' && 
+                !document.getElementById('inputDokterLain').value.trim()) {
+                showAlert('Field Nama Dokter Lain harus diisi!', 'danger');
+                document.getElementById('inputDokterLain').focus();
+                return false;
+            }
+            
+            // Validasi khusus untuk radiografer lain
+            if (document.getElementById('inputRadiografer').value === 'Lain' && 
+                !document.getElementById('inputRadiograferLain').value.trim()) {
+                showAlert('Field Nama Radiografer Lain harus diisi!', 'danger');
+                document.getElementById('inputRadiograferLain').focus();
+                return false;
+            }
+            
+            // Validasi khusus untuk radiolog lain
+            if (document.getElementById('inputRadiolog').value === 'dr. Lain' && 
+                !document.getElementById('inputRadiologLain').value.trim()) {
+                showAlert('Field Nama Radiolog Lain harus diisi!', 'danger');
+                document.getElementById('inputRadiologLain').focus();
+                return false;
+            }
+            
+            // Validasi tarif untuk pemeriksaan lain
+            const jenisPemeriksaan = document.getElementById('inputJenisPemeriksaan').value;
+            if ((jenisPemeriksaan === "USG Lain Lain" || jenisPemeriksaan === "X Ray Lain") &&
+                (!document.getElementById('inputTarifLain').value || !document.getElementById('inputJasaDokterLain').value)) {
+                showAlert('Field Tarif dan Jasa Dokter untuk pemeriksaan lain harus diisi!', 'danger');
+                return false;
+            }
+            
+            // Validasi tarif untuk jenis pemeriksaan yang ada pilihannya
+            if (tarifData[jenisPemeriksaan]) {
+                if (jenisPemeriksaan.includes("USG") && tarifData[jenisPemeriksaan].jasa.length === 0) {
+                    const jasaUSG = document.getElementById('inputJasaDokterUSG');
+                    if (!jasaUSG || !jasaUSG.value.trim()) {
+                        showAlert('Field Jasa Dokter untuk USG harus diisi!', 'danger');
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
+        }
+        
+        // Fungsi untuk mereset form
         function resetForm() {
-            document.getElementById('radiologyForm').reset();
-            document.getElementById('dataId').value = '';
-            document.getElementById('tglPemeriksaan').valueAsDate = new Date();
-            updateTarifFields();
+            // Reset semua input kecuali search dan filter
+            document.querySelectorAll('#inputNo, #inputKodePenjamin, #inputTglPemeriksaan, #inputNamaPasien, #inputJenisKelamin, #inputKelas, #inputJenisDokter, #inputDokterPengirim, #inputTipePemeriksaan, #inputWaktuMulai, #inputWaktuSelesai, #inputDurasi, #inputJumlahFilm, #inputPengulanganFoto, #inputFaktorEksposi, #inputRadiografer, #inputBahayaRadiasi, #inputRadiolog, #inputJenisPemeriksaan, #inputDokterLain, #inputRadiograferLain, #inputRadiologLain, #inputTarifLain, #inputJasaDokterLain, #inputJasaDokterUSG').forEach(element => {
+                element.value = '';
+            });
+            
+            // Reset select elements
+            document.querySelectorAll('select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+            
+            // Sembunyikan kontainer input manual
+            document.getElementById('dokterLainContainer').style.display = 'none';
+            document.getElementById('radiograferLainContainer').style.display = 'none';
+            document.getElementById('radiologLainContainer').style.display = 'none';
+            document.getElementById('tarifSection').style.display = 'none';
+            document.getElementById('tarifLainContainer').style.display = 'none';
+            
+            // Reset tarif container
+            document.getElementById('tarifContainer').innerHTML = '';
+            
+            // Reset datepicker ke hari ini
+            document.getElementById('inputTglPemeriksaan').value = new Date().toISOString().slice(0, 10);
+            
+            // Set waktu default
+            const now = new Date();
+            const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('inputWaktuMulai').value = currentTime;
+            
+            // Set waktu selesai default (1 jam kemudian)
+            const endTime = new Date(now.getTime() + 60 * 60000);
+            const endTimeStr = endTime.getHours().toString().padStart(2, '0') + ':' + endTime.getMinutes().toString().padStart(2, '0');
+            document.getElementById('inputWaktuSelesai').value = endTimeStr;
+            
+            // Hitung durasi
+            setTimeout(() => {
+                const event = new Event('change');
+                document.getElementById('inputWaktuSelesai').dispatchEvent(event);
+            }, 100);
+            
+            // Fokus ke input pertama
+            document.getElementById('inputNo').focus();
+            
+            showAlert('Form telah direset!', 'info');
         }
-
-        function downloadExcel() {
-            if(globalData.length === 0) return alert("Data kosong");
-            const header = ["ID","Tgl","No","Pasien","Kode","JK","Kelas","Dokter","Pengirim","Film","Ulang","Faktor","Rad","Jasa Rad","Jasa Bahaya","Pemeriksaan","Tarif","Jasa Dr"];
-            const rows = globalData.map(d => [d.id, d.tgl_pemeriksaan, `"${d.no_manual}"`, `"${d.nama_pasien}"`, d.kode_penjamin, d.jenis_kelamin, d.kelas, d.jenis_dokter, `"${d.dokter_pengirim}"`, d.jumlah_film, d.pengulangan_foto, `"${d.faktor_eksposi}"`, d.radiografer, d.jasa_radiografer, d.jasa_bahaya, `"${d.jenis_pemeriksaan}"`, d.tarif_pemeriksaan, d.jasa_dokter]);
-            const csvContent = "data:text/csv;charset=utf-8," + header.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
-            const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csvContent));
-            link.setAttribute("download", "radiologi.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        
+        // Fungsi untuk menampilkan pesan alert
+        function showAlert(message, type) {
+            // Hapus alert sebelumnya jika ada
+            const existingAlert = document.querySelector('.alert-custom');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            // Buat alert baru
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-custom alert-dismissible fade show`;
+            alert.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>${message}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            // Tambahkan alert ke container
+            document.querySelector('.container').insertBefore(alert, document.querySelector('.form-section'));
+            
+            // Hilangkan alert setelah 5 detik
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+        
+        // Fungsi untuk memformat angka ke format Rupiah
+        function formatRupiah(angka) {
+            if (!angka) return 'Rp0';
+            return 'Rp' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
     </script>
 </body>
